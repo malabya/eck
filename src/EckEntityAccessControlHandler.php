@@ -29,17 +29,17 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
     $account = $this->prepareUser($account);
     // Checks for bypass permission.
     if ($account->hasPermission('bypass eck entity access')) {
-      $result = AccessResult::allowed()->cachePerRole();
+      $result = AccessResult::allowed()->cachePerPermissions();
 
       return $return_as_object ? $result : $result->isAllowed();
     }
     // Checks for administer eck entities permission.
     if (!$account->hasPermission('administer eck entities')) {
-      $result = AccessResult::forbidden()->cachePerRole();
+      $result = AccessResult::forbidden()->cachePerPermissions();
 
       return $return_as_object ? $result : $result->isAllowed();
     }
-    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerRole();
+    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerPermissions();
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -51,17 +51,17 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
     $account = $this->prepareUser($account);
     // Checks for bypass permission.
     if ($account->hasPermission('bypass eck entity access')) {
-      $result = AccessResult::allowed()->cachePerRole();
+      $result = AccessResult::allowed()->cachePerPermissions();
 
       return $return_as_object ? $result : $result->isAllowed();
     }
     // Checks for administer eck entities permission.
     if (!$account->hasPermission('administer eck entities')) {
-      $result = AccessResult::forbidden()->cachePerRole();
+      $result = AccessResult::forbidden()->cachePerPermissions();
 
       return $return_as_object ? $result : $result->isAllowed();
     }
-    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerRole();
+    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerPermissions();
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -81,7 +81,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' entity'))->cachePerRole();
+    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' entity'))->cachePerPermissions();
   }
 
 }
