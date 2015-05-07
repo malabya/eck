@@ -102,8 +102,8 @@ function eck_entity_type_build(array &$entity_types) {
           'bundle_label' => t('%eck_type type', array('%eck_type' => $eck_type->label)),
           'base_table' => $eck_type->id,
           'links' => array(
-            'edit-form' => 'eck.entity.' . $eck_type->id . '.edit',
-            'delete-form' => 'eck.entity.' . $eck_type->id . '.delete',
+            'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit',
+            'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete',
           ),
           'bundle_entity_type' => $eck_type->id . '_type',
           'field_ui_base_route' => 'entity.' . $eck_type->id . '_type.edit_form',
@@ -121,8 +121,8 @@ function eck_entity_type_build(array &$entity_types) {
           'bundle_of' => $eck_type->id,
           'config_prefix' => 'eck_type.' . $eck_type->id,
           'links' => array(
-            'edit-form' => 'eck.entity.' . $eck_type->id . '_type.edit',
-            'delete-form' => 'eck.entity.' . $eck_type->id . '_type.delete',
+            'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/edit',
+            'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/delete',
           ),
         );
         // Merge the definitions.
