@@ -30,8 +30,8 @@ use Drupal\eck\EckEntityTypeInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "edit-form" = "eck.entity_type.edit",
- *     "delete-form" = "eck.entity_type.delete"
+ *     "edit-form" = "/admin/structure/eck/entity_type/manage/{eck_entity_type}",
+ *     "delete-form" = "/admin/structure/eck/entity_type/manage/{eck_entity_type}/delete"
  *   }
  * )
  *
