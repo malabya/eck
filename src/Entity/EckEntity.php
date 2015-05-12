@@ -150,11 +150,10 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         ->setDisplayConfigurable('view', TRUE);
     }
 
-    if ($entity->language) {
-      $fields['langcode'] = BaseFieldDefinition::create('language')
-        ->setLabel(t('Language code'))
-        ->setDescription(t('The language code of the entity.'));
-    }
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The language code of the entity.'))
+      ->setTranslatable(TRUE);
 
     if ($entity->created) {
       $fields['created'] = BaseFieldDefinition::create('created')

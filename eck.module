@@ -61,6 +61,10 @@ function eck_entity_type_build(array &$entity_types) {
         'list_builder' => 'Drupal\eck\Controller\EckEntityListBuilder',
         'access' => 'Drupal\eck\EckEntityAccessControlHandler',
         'views_data' => 'Drupal\views\EntityViewsData',
+        'translation' => 'Drupal\content_translation\ContentTranslationHandler',
+        'route_provider' => array(
+          'html' => 'Drupal\eck\Entity\EckEntityRouteProvider',
+        ),
       ),
       'admin_permission' => 'administer eck entities',
       'entity_keys' => array(
@@ -68,7 +72,9 @@ function eck_entity_type_build(array &$entity_types) {
         'bundle' => 'type',
         'label' => 'title',
         'uuid' => 'uuid',
+        'langcode' => 'langcode',
       ),
+      'translatable' => TRUE,
       'provider' => 'eck',
       'class' => 'Drupal\eck\Entity\EckEntity',
     );
@@ -102,7 +108,9 @@ function eck_entity_type_build(array &$entity_types) {
           'label' => $eck_type->label,
           'bundle_label' => t('%eck_type type', array('%eck_type' => $eck_type->label)),
           'base_table' => $eck_type->id,
+          'data_table' => $eck_type->id . '_field_data',
           'links' => array(
+            'canonical' => '/admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}',
             'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit',
             'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete',
           ),

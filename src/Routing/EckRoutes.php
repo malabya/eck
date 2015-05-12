@@ -28,19 +28,6 @@ class EckRoutes {
 
     foreach ($eck_types as $eck_type) {
       $t_args = array('@entity' => $eck_type->label);
-      // Route for view.
-      $route_view = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}',
-        array(
-          '_entity_view' => $eck_type->id,
-          '_title' => $eck_type->label,
-        ),
-        array(
-          '_entity_access' => $eck_type->id . '.view',
-        )
-      );
-      // Add the route.
-      $route_collection->add('eck.entity.' . $eck_type->id . '.view', $route_view);
 
       // Route for list.
       $route_list = new Route(
@@ -55,34 +42,6 @@ class EckRoutes {
       );
       // Add the route.
       $route_collection->add('eck.entity.' . $eck_type->id . '.list', $route_list);
-
-      // Route for edit.
-      $route_edit = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit',
-        array(
-          '_entity_form' => $eck_type->id . '.edit',
-          '_title' => t('Edit @entity', $t_args),
-        ),
-        array(
-          '_entity_access' => $eck_type->id . '.edit',
-        )
-      );
-      // Add the route.
-      $route_collection->add('entity.' . $eck_type->id . '.edit_form', $route_edit);
-
-      // Route for delete.
-      $route_delete = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete',
-        array(
-          '_entity_form' => $eck_type->id . '.delete',
-          '_title' => t('Delete @entity', $t_args),
-        ),
-        array(
-          '_entity_access' => $eck_type->id . '.delete',
-        )
-      );
-      // Add the route.
-      $route_collection->add('entity.' . $eck_type->id . '.delete_form', $route_delete);
 
       // Route for type list.
       $route_type_list = new Route(
