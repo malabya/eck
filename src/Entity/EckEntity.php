@@ -79,13 +79,14 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     // The primary key field.
     $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('ID'))
+      ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the eck entity.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unasigned', TRUE);
 
     // Standard field, universal unique id.
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('ID'))
+      ->setLabel(t('UUID'))
       ->setDescription(t('The UUID of the entity.'))
       ->setReadOnly(TRUE);
 
@@ -97,33 +98,23 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
 
     // Title field for the entity.
     $fields['title'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('title'))
+      ->setLabel(t('Title'))
       ->setDescription(t('The title of the entity.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setSettings(
-        array(
-          'default_value' => '',
-          'max_length' => 255,
-          'text_processing' => 0,
-        )
-      )
-      ->setDisplayOptions(
-        'view',
-        array(
-          'label' => 'above',
+      ->setDefaultValue('')
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('view', array(
+          'label' => 'hidden',
           'type' => 'string',
-          'weight' => -6,
+          'weight' => -5,
         )
       )
-      ->setDisplayOptions(
-        'form',
-        array(
-          'type' => 'string',
-          'weight' => -6,
+      ->setDisplayOptions('form', array(
+          'type' => 'string_textfield',
+          'weight' => -5,
         )
       )
-      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
     // The following base fields are set only if the user selected them. In the
@@ -136,30 +127,53 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
-      ->setDisplayOptions(
-        'view',
-        array(
-          'label' => 'above',
-          'type' => 'entity_reference',
-          'weight' => -3,
-        )
-      )
-      ->setDisplayConfigurable('view', TRUE);
+      ->setDisplayOptions('view', array(
+          'label' => 'hidden',
+          'type' => 'author',
+          'weight' => 0,
+        ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language code'))
+      ->setLabel(t('Language'))
       ->setDescription(t('The language code of the entity.'))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
+      ->setDescription(t('The time that the entity was created.'))
       ->setTranslatable(TRUE)
-      ->setDescription(t('The time that the entity was created.'));
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'timestamp',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'datetime_timestamp',
+        'weight' => 10,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setTranslatable(TRUE)
-      ->setDescription(t('The time that the entity was last edited.'));
+      ->setDescription(t('The time that the entity was last edited.'))
+      ->setTranslatable(TRUE);
 
     return $fields;
   }
