@@ -60,6 +60,7 @@ function eck_entity_type_build(array &$entity_types) {
         ),
         'list_builder' => 'Drupal\eck\Controller\EckEntityListBuilder',
         'access' => 'Drupal\eck\EckEntityAccessControlHandler',
+        'views_data' => 'Drupal\views\EntityViewsData',
       ),
       'admin_permission' => 'administer eck entities',
       'entity_keys' => array(
