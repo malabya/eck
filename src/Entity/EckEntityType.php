@@ -60,32 +60,4 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
    */
   public $label;
 
-  /**
-   * The ECK entity type author flag.
-   *
-   * @var string
-   */
-  public $author;
-
-  /**
-   * The ECK entity type created flag.
-   *
-   * @var string
-   */
-  public $created;
-
-  /**
-   * The ECK entity type changed flag.
-   *
-   * @var string
-   */
-  public $changed;
-
-  /**
-   * The ECK entity type language flag.
-   *
-   * @var string
-   */
-  public $language;
-
 }

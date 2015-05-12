@@ -73,34 +73,6 @@ class EckEntityTypeFormBase extends EntityForm {
       '#disabled' => !$eck_entity_type->isNew(),
     );
 
-    $form['author'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Author'),
-      '#default_value' => $eck_entity_type->author,
-      '#disabled' => !$eck_entity_type->isNew(),
-    );
-
-    $form['created'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Created'),
-      '#default_value' => $eck_entity_type->created,
-      '#disabled' => !$eck_entity_type->isNew(),
-    );
-
-    $form['changed'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Changed'),
-      '#default_value' => $eck_entity_type->changed,
-      '#disabled' => !$eck_entity_type->isNew(),
-    );
-
-    $form['language'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Language'),
-      '#default_value' => $eck_entity_type->language,
-      '#disabled' => !$eck_entity_type->isNew(),
-    );
-
     return $form;
   }
 

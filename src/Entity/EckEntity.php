@@ -77,8 +77,6 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $entity = EckEntityType::load($entity_type->id());
-
     // The primary key field.
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
@@ -131,43 +129,37 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
     // The following base fields are set only if the user selected them. In the
     // future we need to find a better solution for defining this base fields.
     // @todo: Find a dynamic way to add base fields.
-    if ($entity->author) {
-      // Owner field of the entity.
-      $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-        ->setLabel(t('Authored by'))
-        ->setDescription(t('The username of the entity author.'))
-        ->setSetting('target_type', 'user')
-        ->setSetting('handler', 'default')
-        ->setTranslatable(TRUE)
-        ->setDisplayOptions(
-          'view',
-          array(
-            'label' => 'above',
-            'type' => 'entity_reference',
-            'weight' => -3,
-          )
+    // Owner field of the entity.
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Authored by'))
+      ->setDescription(t('The username of the entity author.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions(
+        'view',
+        array(
+          'label' => 'above',
+          'type' => 'entity_reference',
+          'weight' => -3,
         )
-        ->setDisplayConfigurable('view', TRUE);
-    }
+      )
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The language code of the entity.'))
       ->setTranslatable(TRUE);
 
-    if ($entity->created) {
-      $fields['created'] = BaseFieldDefinition::create('created')
-        ->setLabel(t('Authored on'))
-        ->setTranslatable(TRUE)
-        ->setDescription(t('The time that the entity was created.'));
-    }
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Authored on'))
+      ->setTranslatable(TRUE)
+      ->setDescription(t('The time that the entity was created.'));
 
-    if ($entity->changed) {
-      $fields['changed'] = BaseFieldDefinition::create('changed')
-        ->setLabel(t('Changed'))
-        ->setTranslatable(TRUE)
-        ->setDescription(t('The time that the entity was last edited.'));
-    }
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setTranslatable(TRUE)
+      ->setDescription(t('The time that the entity was last edited.'));
 
     return $fields;
   }
