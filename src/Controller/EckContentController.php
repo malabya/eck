@@ -90,14 +90,12 @@ class EckContentController extends ControllerBase implements ContainerInjectionI
    */
   public function add(EckEntityTypeInterface $eck_entity_type, $eck_entity_bundle) {
     $entity_type = $this->entityManager()->getStorage($eck_entity_type->id());
-
     // Create an entity.
     $entity = $entity_type->create(
       array(
         'type' => $eck_entity_bundle,
       )
     );
-
     // Get the form and return it.
     return $this->entityFormBuilder()->getForm($entity);
   }
