@@ -71,7 +71,17 @@ class EckEntityBundleDeleteConfirm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // @todo: Check if content of this type exists.
+    // Check if any entity of this type already exists.
+    $content_number = $this->queryFactory->get($this->entity->getEntityType()->getBundleOf())
+      ->condition('type', $this->entity->id())
+      ->count()
+      ->execute();
+    if (!empty($content_number)) {
+      $warning_message = '<p>' . $this->formatPlural($content_number, '%type is used by 1 entity on your site. You can not remove this entity type until you have removed all of the %type entities.', '%type is used by @count entities on your site. You may not remove %type until you have removed all of the %type entities.', array('%type' => $this->entity->label())) . '</p>';
+      $form['#title'] = $this->getQuestion();
+      $form['description'] = array('#markup' => $warning_message);
+      return $form;
+    }
     return parent::buildForm($form, $form_state);
   }
 
