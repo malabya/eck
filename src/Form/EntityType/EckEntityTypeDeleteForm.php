@@ -51,7 +51,7 @@ class EckEntityTypeDeleteForm extends EntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $bundles = entity_get_bundles($this->entity->id());
-    if(!empty($bundles)) {
+    if(!empty($bundles) && empty($bundles[$this->entity->id()])) {
       $warning_message = '<p>' . $this->formatPlural(count($bundles), '%type has 1 bundle. Please delete all %type bundles.', '%type has @count bundles. Please delete all %type bundles.', array('%type' => $this->entity->label())) . '</p>';
       $form['description'] = array('#markup' => $warning_message);
       $form['title'] = $this->getQuestion();
