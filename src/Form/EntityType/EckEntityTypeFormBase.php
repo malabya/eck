@@ -118,14 +118,11 @@ class EckEntityTypeFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // EntityForm provides us with the entity we're working on.
-    $eck_entity_type = $this->getEntity();
-
     // The entity object is already populated with the values from the form.
-    $status = $eck_entity_type->save();
+    $status = $this->entity->save();
 
     // Grab the URL of the new entity. We'll use it in the message.
-    $url = $eck_entity_type->urlInfo();
+    $url = $this->entity->urlInfo();
 
     // Create an edit link.
     $edit_link = $this->l(t('Edit'), $url);
@@ -135,12 +132,12 @@ class EckEntityTypeFormBase extends EntityForm {
       drupal_set_message(
         $this->t(
           'Entity type %label has been updated.',
-          array('%label' => $eck_entity_type->label())
+          array('%label' => $this->entity->label())
         )
       );
-      $this->logger('book')->notice(
+      $this->logger($this->entity->id())->notice(
         'Entity type %label has been updated.',
-        ['%label' => $eck_entity_type->label(), 'link' => $edit_link]
+        ['%label' => $this->entity->label(), 'link' => $edit_link]
       );
     }
     else {
@@ -148,6 +145,8 @@ class EckEntityTypeFormBase extends EntityForm {
       // @todo: Find better solution for this.
       drupal_flush_all_caches();
       // Get the entity manager and check for entity definitions.
+      // For some reason it is not working with this->entityManager.
+      // @todo: find out what is wrong with that.
       $entity_manager = \Drupal::entityManager();
       foreach ($entity_manager->getDefinitions() as $entity_type) {
         // If it is an entity created by this module, notify listeners about it.
@@ -159,12 +158,12 @@ class EckEntityTypeFormBase extends EntityForm {
       drupal_set_message(
         $this->t(
           'Entity type %label has been added.',
-          array('%label' => $eck_entity_type->label())
+          array('%label' => $this->entity->label())
         )
       );
-      $this->logger('book')->notice(
+      $this->logger($this->entity->id())->notice(
         'Entity type %label has been added.',
-        ['%label' => $eck_entity_type->label(), 'link' => $edit_link]
+        ['%label' => $this->entity->label(), 'link' => $edit_link]
       );
     }
 

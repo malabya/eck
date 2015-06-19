@@ -66,11 +66,9 @@ class EckEntityTypeDeleteForm extends EntityDeleteForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $content_entity = $this->entityManager->getDefinition($this->entity->id());
-    $entity_manager = \Drupal::entityManager();
     $this->entityManager->onEntityTypeDelete($content_entity);
     // Delete the entity type.
     $this->entity->delete();
-    $bundles = entity_get_bundles($this->entity->id());
     // Set a message that the entity type was deleted.
     drupal_set_message(
       t(
