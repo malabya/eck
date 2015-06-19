@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\eck\Entity\EckEntityBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -93,7 +94,7 @@ class EckEntityBundleForm extends EntityForm {
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
-        'exists' => 'eck_entity_bundle_load',
+        'exists' => array($this, 'exists'),
         'source' => array('name'),
       ),
       '#description' => t(
@@ -194,6 +195,23 @@ class EckEntityBundleForm extends EntityForm {
     $form_state->setRedirect(
       'eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list'
     );
+  }
+
+  /**
+   * Checks for an existing ECK bundle.
+   *
+   * @param string $type
+   *   The bundle type.
+   * @param array $element
+   *   The form element.
+   * @param FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return bool
+   *   TRUE if this format already exists, FALSE otherwise.
+   */
+  public function exists($type, array $element, FormStateInterface $form_state) {
+    return EckEntityBundle::load($type);
   }
 
 }
