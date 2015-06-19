@@ -7,16 +7,20 @@
 
 namespace Drupal\eck\Form\EntityType;
 
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityDeleteForm;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirm form for deleting the entity.
  *
  * @ingroup eck
  */
-class EckEntityTypeDeleteForm extends EntityConfirmFormBase {
+class EckEntityTypeDeleteForm extends EntityDeleteForm {
 
   /**
    * {@inheritdoc}
@@ -45,10 +49,28 @@ class EckEntityTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $bundles = entity_get_bundles($this->entity->id());
+    if(!empty($bundles)) {
+      $warning_message = '<p>' . $this->formatPlural(count($bundles), '%type has 1 bundle. Please delete all %type bundles.', '%type has @count bundles. Please delete all %type bundles.', array('%type' => $this->entity->label())) . '</p>';
+      $form['description'] = array('#markup' => $warning_message);
+      $form['title'] = $this->getQuestion();
+      return $form;
+    }
+
+    return parent::buildForm($form, $form_state);;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $content_entity = $this->entityManager->getDefinition($this->entity->id());
+    $entity_manager = \Drupal::entityManager();
+    $this->entityManager->onEntityTypeDelete($content_entity);
     // Delete the entity type.
     $this->entity->delete();
-
+    $bundles = entity_get_bundles($this->entity->id());
     // Set a message that the entity type was deleted.
     drupal_set_message(
       t(
