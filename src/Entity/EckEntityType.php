@@ -16,7 +16,6 @@ use Drupal\eck\EckEntityTypeInterface;
  * @ConfigEntityType(
  *   id = "eck_entity_type",
  *   label = @Translation("ECK Entity Type"),
- *   admin_permission = "administer ECK entity types",
  *   handlers = {
  *     "list_builder" = "Drupal\eck\Controller\EckEntityTypeListBuilder",
  *     "form" = {

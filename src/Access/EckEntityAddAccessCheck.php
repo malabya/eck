@@ -52,19 +52,12 @@ class EckEntityAddAccessCheck implements AccessInterface {
    */
   public function access(AccountInterface $account, EckEntityTypeInterface $eck_entity_type, $eck_entity_bundle = NULL) {
     $access_control_handler = $this->entityManager->getAccessControlHandler($eck_entity_type->id());
-
-    // If checking whether an entity of a particular bundle may be created.
-    if ($eck_entity_bundle) {
-      $eck_entity_bundle = EckEntityBundle::load($eck_entity_bundle);
-      return $access_control_handler->createAccess($eck_entity_bundle->id(), $account, array(), TRUE);
+    if (!empty($eck_entity_bundle)) {
+      return $access_control_handler->createAccess($eck_entity_bundle, $account, array(), TRUE);
     }
     // Get the entity type bundles.
     $bundles = $this->entityManager->getStorage($eck_entity_type->id() . '_type')->loadMultiple();
-    // If the bundles are empty then check if user has permission to create a
-    // new bundle.
-    if (empty($bundles)) {
-      return AccessResult::allowedIfHasPermission($account, 'administer eck entity bundles');
-    }
+
     // If checking whether an entity of any type may be created.
     foreach ($bundles as $eck_entity_bundle) {
       if (($access = $access_control_handler->createAccess($eck_entity_bundle->id(), $account, array(), TRUE)) && $access->isAllowed()) {
