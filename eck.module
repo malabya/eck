@@ -83,7 +83,6 @@ function eck_entity_type_build(array &$entity_types) {
       'entity_keys' => array(
         'id' => 'type',
         'label' => 'name',
-        'uuid' => 'uuid',
       ),
       'provider' => 'eck',
       'class' => 'Drupal\eck\Entity\EckEntityBundle',
@@ -172,4 +171,13 @@ function eck_theme() {
       'file' => 'eck.pages.inc',
     ),
   );
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function eck_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+  if ($entity_type->getProvider() == 'eck') {
+    unset($fields['title']);
+  }
 }
