@@ -47,7 +47,13 @@ class EckEntityTypeListBuilder extends ConfigEntityListBuilder {
       'weight' => -10,
       'url' => new Url('eck.entity.add_page', array('eck_entity_type' => $entity->id)),
     );
-    $url = array_merge_recursive($row, parent::buildRow($entity));
+
+    // Add link to list operation.
+    $row['operations']['data']['#links']['content_list'] = array(
+      'title' => $this->t('Content list'),
+      'weight' => -10,
+      'url' => new Url('eck.entity.' . $entity->id . '.list'),
+    );
 
     return array_merge_recursive($row, parent::buildRow($entity));
   }
