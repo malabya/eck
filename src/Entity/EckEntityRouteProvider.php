@@ -55,7 +55,7 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
         'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit',
         array(
           '_entity_form' => $eck_type->id . '.edit',
-          '_title' => t('Edit @entity', $t_args),
+          '_title' => 'Edit' . $eck_type->label,
         ),
         array(
           '_entity_access' => $eck_type->id . '.edit',
@@ -72,7 +72,7 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
         'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete',
         array(
           '_entity_form' => $eck_type->id . '.delete',
-          '_title' => t('Delete @entity', $t_args),
+          '_title' => 'Delete' . $eck_type->label,
         ),
         array(
           '_entity_access' => $eck_type->id . '.delete',
