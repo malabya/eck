@@ -9,7 +9,6 @@ namespace Drupal\eck\Form\Entity;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the ECK entity forms.
@@ -17,7 +16,7 @@ use Drupal\Core\Language\Language;
  * @ingroup eck
  */
 class EckEntityForm extends ContentEntityForm {
-  
+
   /**
    * {@inheritdoc}
    */

@@ -12,7 +12,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\eck\EckEntityTypeInterface;
 use Drupal\eck\Entity\EckEntityBundle;
-use Drupal\eck\Entity\EckEntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

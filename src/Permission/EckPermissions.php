@@ -10,7 +10,6 @@ namespace Drupal\eck\Permission;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eck\Entity\EckEntityBundle;
-use Drupal\eck\Entity\EckEntityType;
 
 /**
  * Defines dynamic permissions.
@@ -40,13 +39,13 @@ class EckPermissions {
   /**
    * Builds a standard list of entity permissions for a given type.
    *
-   * @param EckEntityType $eck_type
+   * @param EckEntityBundle $eck_type
    *   The entity type.
    *
    * @return array
    *   An array of permissions.
    */
-  public function buildPermissions(EckEntityBundle $eck_type) {
+  public function buildPermssions(EckEntityBundle $eck_type) {
     $type_id = $eck_type->id();
     $type_params = array('%type_name' => $eck_type->label());
 
