@@ -27,14 +27,12 @@ class EckRoutes {
     $eck_types = EckEntityType::loadMultiple();
 
     foreach ($eck_types as $eck_type) {
-      $t_args = array('@entity' => $eck_type->label);
-
       // Route for list.
       $route_list = new Route(
         'admin/structure/eck/entity/' . $eck_type->id,
         array(
           '_entity_list' => $eck_type->id,
-          '_title' => t('@entity list', $t_args),
+          '_title' => $eck_type->label . 'list',
         ),
         array(
           '_permission' => 'view eck entity',
@@ -49,7 +47,7 @@ class EckRoutes {
         array(
           '_controller' => '\Drupal\Core\Entity\Controller\EntityListController::listing',
           'entity_type' => $eck_type->id . '_type',
-          '_title' => t('@entity types', $t_args),
+          '_title' => $eck_type->label . 'types',
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -63,7 +61,7 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/add',
         array(
           '_entity_form' => $eck_type->id . '_type.add',
-          '_title' => t('Add @entity type', $t_args),
+          '_title' => $eck_type->label . 'type',
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -77,7 +75,7 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}',
         array(
           '_entity_form' => $eck_type->id . '_type.edit',
-          '_title' => t('Edit @entity type', $t_args),
+          '_title' => 'Edit' . $eck_type->label . 'type',
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -91,7 +89,7 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/delete',
         array(
           '_entity_form' => $eck_type->id . '_type.delete',
-          '_title' => t('Delete @entity type', $t_args),
+          '_title' => 'Delete' . $eck_type->label . 'type',
         ),
         array(
           '_permission' => 'administer eck entity bundles',

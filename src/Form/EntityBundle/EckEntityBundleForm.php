@@ -7,6 +7,7 @@
 
 namespace Drupal\eck\Form\EntityBundle;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -57,8 +58,7 @@ class EckEntityBundleForm extends EntityForm {
     $entity_type_id = $this->entity->getEntityType()->getBundleOf();
     $type = $this->entity;
     if ($this->operation == 'add') {
-      $form['#title'] = SafeMarkup::format($this->t('Add !type', array('!type' => $type->getEntityType()->getLabel())));
-      $fields = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
+      $form['#title'] = $this->t('Add !type', array('!type' => $type->getEntityType()->getLabel()));
       $entity = $this->entityManager->getStorage($entity_type_id)->create(
         array('type' => $type->uuid())
       );
@@ -67,10 +67,6 @@ class EckEntityBundleForm extends EntityForm {
       $form['#title'] = $this->t(
         'Edit %label entity bundle',
         array('%label' => $type->label())
-      );
-      $fields = $this->entityManager->getFieldDefinitions(
-        $entity_type_id,
-        $type->id()
       );
       $entity = $this->entityManager->getStorage($entity_type_id)->create(
         array('type' => $type->id())

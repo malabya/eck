@@ -25,7 +25,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(EntityInterface $entity, $operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
     // Checks for bypass permission.
     if ($account->hasPermission('bypass eck entity access')) {
@@ -38,7 +38,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
       return $return_as_object ? $result : $result->isAllowed();
     }
 
-    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerPermissions();
+    $result = parent::access($entity, $operation, $account, TRUE)->cachePerPermissions();
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -68,7 +68,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($entity->getOwnerId() == $account->id()) {
       return AccessResult::allowedIfHasPermission($account, $operation . ' own ' . $entity->bundle() . ' entity');
     }
