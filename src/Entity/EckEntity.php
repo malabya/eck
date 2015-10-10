@@ -82,7 +82,8 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the eck entity.'))
       ->setReadOnly(TRUE)
-      ->setSetting('unasigned', TRUE);
+      ->setSetting('unasigned', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     // Standard field, universal unique id.
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
@@ -115,7 +116,8 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
           'weight' => -5,
         )
       )
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     // The following base fields are set only if the user selected them. In the
     // future we need to find a better solution for defining this base fields.
@@ -141,7 +143,8 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
           'placeholder' => '',
         ),
       ))
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
@@ -153,7 +156,8 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
       ->setDisplayOptions('form', array(
         'type' => 'language_select',
         'weight' => 2,
-      ));
+      ))
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
@@ -168,12 +172,14 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         'type' => 'datetime_timestamp',
         'weight' => 10,
       ))
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setDisplayConfigurable('view', TRUE);;
 
     return $fields;
   }
