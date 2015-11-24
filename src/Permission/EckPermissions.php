@@ -45,7 +45,7 @@ class EckPermissions {
    * @return array
    *   An array of permissions.
    */
-  public function buildPermssions(EckEntityBundle $eck_type) {
+  public function buildPermissions(EckEntityBundle $eck_type) {
     $type_id = $eck_type->id();
     $type_params = array('%type_name' => $eck_type->label());
 
