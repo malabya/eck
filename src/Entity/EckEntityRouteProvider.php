@@ -28,8 +28,6 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
     $eck_types = EckEntityType::loadMultiple();
 
     foreach ($eck_types as $eck_type) {
-      $t_args = array('@entity' => $eck_type->label);
-
       // Route for view.
       $route_view = (
       new Route(
@@ -83,9 +81,8 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
         'entity.' . $eck_type->id . '.delete_form',
         $route_delete
       );
-
-      return $route_collection;
     }
+    return $route_collection;
   }
 
 }
