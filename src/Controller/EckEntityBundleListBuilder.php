@@ -107,9 +107,9 @@ class EckEntityBundleListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $build = parent::render();
     $build['table']['#empty'] = t(
-      'No bundles available. !link.',
+      'No bundles available. @link.',
       array(
-        '!link' => \Drupal::l('Add new bundle', new Url('eck.entity.' . $this->entityTypeId . '.add')),
+        '@link' => \Drupal::l('Add new bundle', new Url('eck.entity.' . $this->entityTypeId . '.add')),
       )
     );
 
