@@ -56,7 +56,7 @@ class EckEntityBundleForm extends EntityForm {
     $entity_type_id = $this->entity->getEntityType()->getBundleOf();
     $type = $this->entity;
     if ($this->operation == 'add') {
-      $form['#title'] = $this->t('Add !type', array('!type' => $type->getEntityType()->getLabel()));
+      $form['#title'] = $this->t('Add %type', array('%type' => $type->getEntityType()->getLabel()));
       $entity = $this->entityManager->getStorage($entity_type_id)->create(
         array('type' => $type->uuid())
       );
