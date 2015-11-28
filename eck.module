@@ -6,10 +6,12 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\eck\Entity\EckEntityType;
-use Drupal\eck\Entity\EckEntityBundle;
 
 /**
  * Defines the online documentation url of the ECK module.
@@ -161,21 +163,55 @@ function eck_menu_local_actions_alter(&$local_actions) {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function eck_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity instanceof \Drupal\eck\Entity\EckEntity) {
+    $build['#theme'] = 'eck_entity';
+    $build['#entity'] = $entity;
+    unset($build["#{$entity->getEntityTypeId()}"]);
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function eck_theme() {
-  return array(
-    'eck_content_add_list' => array(
-      'variables' => array('content' => NULL, 'entity_type' => NULL),
-      'file' => 'eck.pages.inc',
-    ),
-  );
+  $templates['eck_entity'] = [
+    'render element' => 'entity',
+  ];
+
+  $templates['eck_content_add_list'] = [
+    'variables' => ['content' => NULL, 'entity_type' => NULL],
+    'file' => 'eck.pages.inc',
+  ];
+
+  return $templates;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eck_theme_suggestions_eck_entity(array $variables) {
+  /** @var \Drupal\eck\Entity\EckEntity $entity */
+  $entity = $variables['entity']['#entity'];
+  $sanitized_view_mode = strtr($variables['entity']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'eck_entity__' . $sanitized_view_mode;
+  $suggestions[] = 'eck_entity__' . $entity->getEntityTypeId();
+  $suggestions[] = 'eck_entity__' . $entity->getEntityTypeId() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'eck_entity__' . $entity->getEntityTypeId() . '__' . $entity->bundle();
+  $suggestions[] = 'eck_entity__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'eck_entity__' . $entity->id();
+  $suggestions[] = 'eck_entity__' . $entity->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
 }
 
 /**
  * Implements hook_entity_bundle_field_info_alter().
  */
-function eck_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+function eck_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->getProvider() == 'eck') {
     unset($fields['title']);
   }
