@@ -9,23 +9,26 @@ eck.eck_entity_type.*:
     id:
       type: string
       label: 'Id'
-    uuid:
-      type: string
-      label: 'uuid'
     label:
       type: label
       label: 'Name'
+    langcode:
+      type: string
+      label: 'Langcode'
+    uuid:
+      type: string
+      label: 'uuid'
 
 eck.eck_type.*:
   type: config_entity
-  label: 'ECK Entity Type'
+  label: 'ECK Entity bundle'
   mapping:
     name:
       type: label
       label: 'Name'
     type:
       type: string
-      label: 'Machine-readable name'
+      label: 'Bundle machine name'
     description:
       type: text
       label: 'Explanation or submission guidelines'

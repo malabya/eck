@@ -12,7 +12,26 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\eck\EckEntityBundleInterface;
 
 /**
- * Defines the Node type configuration entity.
+ * Defines the ECK entity bundle configuration entity.
+ *
+ * @ConfigEntityType(
+ *   id = "eck_entity_bundle",
+ *   label = @Translation("Content type"),
+ *   handlers = {
+ *     "access" = "Drupal\eck\EckEntityAccessControlHandler",
+ *     "form" = {
+ *       "add" = "Drupal\eck\Form\EntityBundle\EckEntityBundleForm",
+ *       "edit" = "Drupal\eck\Form\EntityBundle\EckEntityBundleForm",
+ *       "delete" = "Drupal\eck\Form\EntityBundle\EckEntityBundleDeleteConfirm"
+ *     },
+ *     "list_builder" = "Drupal\eck\Controller\EckEntityBundleListBuilder",
+ *   },
+ *   admin_permission = "administer eck entity bundles",
+ *   entity_keys = {
+ *     "id" = "bundle",
+ *     "label" = "name"
+ *   }
+ * )
  *
  * @ingroup eck
  */
@@ -47,15 +66,6 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
   public $help;
 
   /**
-   * The machine name of the entity type.
-   *
-   * @var string
-   *
-   * @todo: rename this.
-   */
-  public $entity_type;
-
-  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -72,14 +82,25 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(
-    EntityStorageInterface $storage,
-    array $entities
-  ) {
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
     // Clear the cache.
     $storage->resetCache(array($entities));
+  }
+
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    // Update workflow options.
+    // @todo Make it possible to get default values without an entity.
+    //   https://www.drupal.org/node/2318187
+    \Drupal::entityTypeManager()->getStorage(
+      $this->getEntityType()->getBundleOf()
+    )->create(['type' => $this->id()]);
+
+    // @todo set up config dependencies.
+
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
   /**
@@ -99,7 +120,8 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     $entity_manager = \Drupal::entityManager();
     $bundles = array();
     foreach (EckEntityType::loadMultiple() as $entity) {
-      $bundles = array_merge($bundles, $entity_manager->getStorage($entity->id() . '_type')->loadMultiple($ids));
+      $bundles = array_merge($bundles, $entity_manager->getStorage($entity->id() . '_type')
+        ->loadMultiple($ids));
     }
 
     return $bundles;
@@ -111,6 +133,7 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
   public static function load($id) {
     // Because we use a single class for multiple entity bundles we need to
     // parse all entity types and find the id.
+    // @todo remove code duplication by using $this->loadMultiple().
     $entity_manager = \Drupal::entityManager();
     $loaded_entity = NULL;
     foreach (EckEntityType::loadMultiple() as $entity) {

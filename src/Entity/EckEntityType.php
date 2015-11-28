@@ -8,6 +8,8 @@
 namespace Drupal\eck\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\eck\EckEntityTypeInterface;
 
 /**
@@ -38,6 +40,8 @@ use Drupal\eck\EckEntityTypeInterface;
  */
 class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
 
+  use LinkGeneratorTrait;
+
   /**
    * The ECK entity type ID.
    *
@@ -58,5 +62,51 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
    * @var string
    */
   public $label;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    // Create an edit link.
+    $edit_link = $this->l(t('Edit'), $this->urlInfo());
+
+    if ($update) {
+      $this->logger($this->id())->notice(
+        'Entity type %label has been updated.',
+        ['%label' => $this->label(), 'link' => $edit_link]
+      );
+    }
+    else {
+      $entity_manager = $this->entityManager();
+
+      // Clear caches first.
+      $entity_manager->clearCachedDefinitions();
+      \Drupal::service('router.builder')->rebuild();
+
+      // Notify storage to create the database schema.
+      $entity_type = $entity_manager->getDefinition($this->id());
+      $entity_manager->onEntityTypeCreate($entity_type);
+
+      $this->logger($this->id())->notice(
+        'Entity type %label has been added.',
+        ['%label' => $this->label(), 'link' => $edit_link]
+      );
+    }
+  }
+
+  /**
+   * Gets the logger for a specific channel.
+   *
+   * @param string $channel
+   *   The name of the channel.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The logger for this channel.
+   */
+  protected function logger($channel) {
+    return \Drupal::getContainer()->get('logger.factory')->get($channel);
+  }
 
 }

@@ -167,25 +167,7 @@ class EckEntityBundleForm extends EntityForm {
       );
       $this->logger($this->entity->getEntityTypeId())->notice('Added entity bundle %name.', $context);
     }
-    $fields = $this->entityManager->getFieldDefinitions(
-      $type->getEntityType()->getBundleOf(),
-      $type->id()
-    );
-    // Update title field definition.
-    $title_field = $fields['title'];
-    $title_label = $form_state->getValue('title_label');
-    if ($title_field->getLabel() != $title_label) {
-      $title_field->getConfig($type->id())->setLabel($title_label)->save();
-    }
 
-    // Update workflow options.
-    // @todo Make it possible to get default values without an entity.
-    //   https://www.drupal.org/node/2318187
-    $node = $this->entityManager->getStorage(
-      $type->getEntityType()->getBundleOf()
-    )->create(array('type' => $type->id()));
-
-    $this->entityManager->clearCachedFieldDefinitions();
     $form_state->setRedirect(
       'eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list'
     );

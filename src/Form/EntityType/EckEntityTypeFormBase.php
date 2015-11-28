@@ -121,12 +121,6 @@ class EckEntityTypeFormBase extends EntityForm {
     // The entity object is already populated with the values from the form.
     $status = $this->entity->save();
 
-    // Grab the URL of the new entity. We'll use it in the message.
-    $url = $this->entity->urlInfo();
-
-    // Create an edit link.
-    $edit_link = $this->l(t('Edit'), $url);
-
     if ($status == SAVED_UPDATED) {
       // If a type was updated.
       drupal_set_message(
@@ -135,35 +129,13 @@ class EckEntityTypeFormBase extends EntityForm {
           array('%label' => $this->entity->label())
         )
       );
-      $this->logger($this->entity->id())->notice(
-        'Entity type %label has been updated.',
-        ['%label' => $this->entity->label(), 'link' => $edit_link]
-      );
     }
     else {
-      // Clear the cache to get the new defined entities.
-      // @todo: Find better solution for this.
-      drupal_flush_all_caches();
-      // Get the entity manager and check for entity definitions.
-      // For some reason it is not working with this->entityManager.
-      // @todo: find out what is wrong with that.
-      $entity_manager = \Drupal::entityManager();
-      foreach ($entity_manager->getDefinitions() as $entity_type) {
-        // If it is an entity created by this module, notify listeners about it.
-        if ($entity_type->getProvider() == 'eck') {
-          $entity_manager->onEntityTypeCreate($entity_type);
-        }
-      }
-      // If we created a new entity...
       drupal_set_message(
         $this->t(
           'Entity type %label has been added.',
           array('%label' => $this->entity->label())
         )
-      );
-      $this->logger($this->entity->id())->notice(
-        'Entity type %label has been added.',
-        ['%label' => $this->entity->label(), 'link' => $edit_link]
       );
     }
 
