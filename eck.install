@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Enable all base fields for existing ECK entity types.
+ */
+function eck_update_8001() {
+  $entity_types = \Drupal::entityTypeManager()->getStorage('eck_entity_type')->loadMultiple();
+  foreach ($entity_types as $entity_type) {
+    $entity_type->uid = TRUE;
+    $entity_type->title = TRUE;
+    $entity_type->created = TRUE;
+    $entity_type->changed = TRUE;
+    $entity_type->save();
+  }
+}

@@ -15,6 +15,24 @@ eck.eck_entity_type.*:
     langcode:
       type: string
       label: 'Langcode'
+    status:
+      type: boolean
+      label: 'Status'
+    dependencies:
+      type: mapping
+      label: 'Dependencies'
+    uid:
+      type: boolean
+      label: 'Author'
+    created:
+      type: boolean
+      label: 'Created'
+    changed:
+      type: boolean
+      label: 'Changed'
+    title:
+      type: boolean
+      label: 'Title'
     uuid:
       type: string
       label: 'uuid'

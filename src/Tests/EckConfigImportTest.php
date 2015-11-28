@@ -61,7 +61,13 @@ class EckConfigImportTest extends WebTestBase {
       'id' => 'test_entity',
       'label' => 'Test entity',
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+      'dependencies' => [],
       'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
+      'status' => TRUE,
+      'uid' => TRUE,
+      'created' => TRUE,
+      'changed' => TRUE,
+      'title' => TRUE,
     ];
     $sync->write($entity_type_config_name, $entity_type_config);
     // Create entity bundle config entity.
@@ -81,10 +87,10 @@ class EckConfigImportTest extends WebTestBase {
 
     // Verify the values appeared.
     $config = $this->config($entity_type_config_name);
-    $this->assertIdentical($config->getRawData(), $entity_type_config, t('Entity type config imported successfully.'));
+    $this->assertEqual($config->getRawData(), $entity_type_config, t('Entity type config imported successfully.'));
     // Verify the values appeared.
     $config = $this->config($entity_bundle_config_name);
-    $this->assertIdentical($config->getRawData(), $entity_bundle_config, t('Entity bundle config imported successfully.'));
+    $this->assertEqual($config->getRawData(), $entity_bundle_config, t('Entity bundle config imported successfully.'));
 
     // Verify the entity type has been added.
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));

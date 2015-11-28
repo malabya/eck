@@ -47,7 +47,7 @@ class EckEntityListBuilder extends EntityListBuilder {
     /* @var $entity \Drupal\eck\Entity\EckEntity */
     $row['id'] = $entity->id();
     $row['title'] = \Drupal::l(
-      $this->getLabel($entity),
+      $entity->label(),
       Url::fromRoute(
         'entity.' . $this->entityTypeId . '.canonical',
         array(

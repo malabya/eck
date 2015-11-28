@@ -39,6 +39,8 @@ class EckEntityTypeFormBase extends EntityForm {
 
   /**
    * Factory method for EckEntityTypeFormBase.
+   *
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static($container->get('entity.query'));
@@ -61,6 +63,7 @@ class EckEntityTypeFormBase extends EntityForm {
       '#default_value' => $eck_entity_type->label(),
       '#required' => TRUE,
     );
+
     $form['id'] = array(
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
@@ -72,6 +75,22 @@ class EckEntityTypeFormBase extends EntityForm {
       ),
       '#disabled' => !$eck_entity_type->isNew(),
     );
+
+    $form['base_fields'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Available base fields'),
+    ];
+
+    $config = \Drupal::config('eck.eck_entity_type.' . $eck_entity_type->id());
+    foreach (['created', 'changed', 'uid', 'title'] as $field) {
+      $title = $field === 'uid' ? 'author' : $field;
+
+      $form['base_fields'][$field] = [
+        '#type' => 'checkbox',
+        '#title' => t('%field field', ['%field' => ucfirst($title)]),
+        '#default_value' => $config->get($field),
+      ];
+    }
 
     return $form;
   }
@@ -122,7 +141,6 @@ class EckEntityTypeFormBase extends EntityForm {
     $status = $this->entity->save();
 
     if ($status == SAVED_UPDATED) {
-      // If a type was updated.
       drupal_set_message(
         $this->t(
           'Entity type %label has been updated.',

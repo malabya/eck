@@ -33,15 +33,6 @@ use Drupal\eck\EckEntityTypeInterface;
  *   links = {
  *     "edit-form" = "/admin/structure/eck/entity_type/manage/{eck_entity_type}",
  *     "delete-form" = "/admin/structure/eck/entity_type/manage/{eck_entity_type}/delete"
- *   },
- *   config_export = {
- *     "id",
- *     "uuid",
- *     "label",
- *     "created",
- *     "changed",
- *     "uid",
- *     "title"
  *   }
  * )
  *
@@ -82,9 +73,6 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     $edit_link = $this->l(t('Edit'), $this->urlInfo());
 
     if ($update) {
-       // Update the field definitions.
-       \Drupal::entityDefinitionUpdateManager()->applyUpdates();
-
       $this->logger($this->id())->notice(
         'Entity type %label has been updated.',
         ['%label' => $this->label(), 'link' => $edit_link]
@@ -120,33 +108,5 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
   protected function logger($channel) {
     return \Drupal::getContainer()->get('logger.factory')->get($channel);
   }
-
-  /**
-   * If this entity type has an "Author" base field.
-   *
-   * @var boolean
-   */
-  public $uid;
-
-  /**
-   * If this entity type has a "Title" base field.
-   *
-   * @var boolean
-   */
-  public $title;
-
-  /**
-   * If this entity type has a "Created" base field.
-   *
-   * @var boolean
-   */
-  public $created;
-
-  /**
-   * If this entity type has a "Changed" base field.
-   *
-   * @var boolean
-   */
-  public $changed;
 
 }
