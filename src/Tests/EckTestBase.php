@@ -20,7 +20,7 @@ abstract class EckTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'eck');
+  public static $modules = ['node', 'eck'];
 
   public function setUp() {
     parent::setUp();
@@ -68,7 +68,7 @@ abstract class EckTestBase extends WebTestBase {
     }
 
     $this->drupalPostForm(Url::fromRoute('eck.entity_type.add'), $edit, t('Create entity type'));
-    $this->assertRaw(t('Entity type %label has been added.', array('%label' => $label)));
+    $this->assertRaw(t('Entity type %label has been added.', ['%label' => $label]));
 
     return ['id' => $id, 'label' => $label];
   }
@@ -91,7 +91,7 @@ abstract class EckTestBase extends WebTestBase {
       'type' => $bundle,
     ];
     $this->drupalPostForm("admin/structure/eck/entity/{$entity_type}/types/add", $edit, t('Save bundle'));
-    $this->assertRaw(t('The entity bundle %name has been added.', array('%name' => $label)));
+    $this->assertRaw(t('The entity bundle %name has been added.', ['%name' => $label]));
 
     return $bundle;
   }
