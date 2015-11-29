@@ -24,7 +24,7 @@ class DynamicBaseFieldTest extends EckTestBase {
     // Make sure base fields are added.
     $route_args = [
       'eck_entity_type' => $type['id'],
-      'eck_entity_bundle' => $bundle
+      'eck_entity_bundle' => $bundle['type'],
     ];
     $this->drupalGet(Url::fromRoute('eck.entity.add', $route_args));
     $this->assertField('uid[0][target_id]');
@@ -69,7 +69,7 @@ class DynamicBaseFieldTest extends EckTestBase {
     $edit = ['title[0][value]' => $this->randomMachineName()];
     $route_args = [
       'eck_entity_type' => $type['id'],
-      'eck_entity_bundle' => $bundle
+      'eck_entity_bundle' => $bundle['type'],
     ];
     $this->drupalPostForm(Url::fromRoute('eck.entity.add', $route_args), $edit, t('Save'));
     $this->assertRaw($edit['title[0][value]']);

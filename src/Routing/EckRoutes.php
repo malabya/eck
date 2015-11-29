@@ -32,10 +32,11 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id,
         array(
           '_entity_list' => $eck_type->id,
-          '_title' => $eck_type->label . 'list',
+          '_title' => '%type content',
+          '_title_arguments' => ['%type' => ucfirst($eck_type->label())],
         ),
         array(
-          '_permission' => 'view eck entity',
+          '_permission' => 'access eck entities+bypass eck entity access',
         )
       );
       // Add the route.
@@ -47,7 +48,8 @@ class EckRoutes {
         array(
           '_controller' => '\Drupal\Core\Entity\Controller\EntityListController::listing',
           'entity_type' => $eck_type->id . '_type',
-          '_title' => $eck_type->label . 'types',
+          '_title' => '%type bundles',
+          '_title_arguments' => ['%type' => ucfirst($eck_type->label())],
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -61,7 +63,8 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/add',
         array(
           '_entity_form' => $eck_type->id . '_type.add',
-          '_title' => $eck_type->label . 'type',
+          '_title' => 'Add %type bundle',
+          '_title_arguments' => ['%type' => $eck_type->label()],
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -75,7 +78,8 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}',
         array(
           '_entity_form' => $eck_type->id . '_type.edit',
-          '_title' => 'Edit' . $eck_type->label . 'type',
+          '_title' => 'Edit %type bundle',
+          '_title_arguments' => ['%type' => $eck_type->label()],
         ),
         array(
           '_permission' => 'administer eck entity bundles',
@@ -89,7 +93,8 @@ class EckRoutes {
         'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/delete',
         array(
           '_entity_form' => $eck_type->id . '_type.delete',
-          '_title' => 'Delete' . $eck_type->label . 'type',
+          '_title' => 'Delete %type bundle',
+          '_title_arguments' => ['%type' => $eck_type->label()],
         ),
         array(
           '_permission' => 'administer eck entity bundles',

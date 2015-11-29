@@ -55,22 +55,11 @@ class EckEntityBundleForm extends EntityForm {
     $form = parent::form($form, $form_state);
     $entity_type_id = $this->entity->getEntityType()->getBundleOf();
     $type = $this->entity;
-    if ($this->operation == 'add') {
-      $form['#title'] = $this->t('Add %type', array('%type' => $type->getEntityType()->getLabel()));
-      $entity = $this->entityManager->getStorage($entity_type_id)->create(
-        array('type' => $type->uuid())
-      );
-    }
-    else {
-      $form['#title'] = $this->t(
-        'Edit %label entity bundle',
-        array('%label' => $type->label())
-      );
-      $entity = $this->entityManager->getStorage($entity_type_id)->create(
-        array('type' => $type->id())
-      );
-    }
+    $entity = $this->entityManager->getStorage($entity_type_id)->create([
+        'type' => $this->operation == 'add' ? $type->uuid(): $type->id()]
+    );
     $type_label = $entity->getEntityType()->getLabel();
+
     $form['name'] = array(
       '#title' => t('Name'),
       '#type' => 'textfield',

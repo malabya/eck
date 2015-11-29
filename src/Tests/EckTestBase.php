@@ -79,8 +79,8 @@ abstract class EckTestBase extends WebTestBase {
    * @param $entity_type
    *  The entity type to add the bundle for.
    *
-   * @return string
-   *  The machine name of the newly created bundle.
+   * @return array
+   *  The machine name and label of the new bundle.
    */
   protected function createEntityBundle($entity_type) {
     $label = $this->randomMachineName();
@@ -93,7 +93,7 @@ abstract class EckTestBase extends WebTestBase {
     $this->drupalPostForm("admin/structure/eck/entity/{$entity_type}/types/add", $edit, t('Save bundle'));
     $this->assertRaw(t('The entity bundle %name has been added.', ['%name' => $label]));
 
-    return $bundle;
+    return $edit;
   }
 
 }
