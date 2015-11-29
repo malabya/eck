@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\eck\Access\EckEntityAddAccessCheck.
+ * Contains \Drupal\eck\Access\EckEntityCreateAccessCheck.
  */
 
 namespace Drupal\eck\Access;
@@ -16,7 +16,7 @@ use Drupal\eck\EckEntityTypeInterface;
 /**
  * Determines access for ECK entity add page.
  */
-class EckEntityAddAccessCheck implements AccessInterface {
+class EckEntityCreateAccessCheck implements AccessInterface {
 
   /**
    * The entity manager.
@@ -26,7 +26,7 @@ class EckEntityAddAccessCheck implements AccessInterface {
   protected $entityManager;
 
   /**
-   * Constructs an EckEntityAddAccessCheck object.
+   * Constructs an EckEntityCreateAccessCheck object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.

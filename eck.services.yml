@@ -1,6 +1,6 @@
 services:
   access_check.eck_entity.add:
-    class: Drupal\eck\Access\EckEntityAddAccessCheck
+    class: Drupal\eck\Access\EckEntityCreateAccessCheck
     arguments: ['@entity.manager']
     tags:
-      - { name: access_check, applies_to: _eck_entity_add_access }
+      - { name: access_check, applies_to: _eck_entity_create_access }

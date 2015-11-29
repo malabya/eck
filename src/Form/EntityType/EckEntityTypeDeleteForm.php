@@ -50,11 +50,10 @@ class EckEntityTypeDeleteForm extends EntityDeleteForm {
     if (!empty($bundles) && empty($bundles[$this->entity->id()])) {
       $warning_message = '<p>' . $this->formatPlural(count($bundles), '%type has 1 bundle. Please delete all %type bundles.', '%type has @count bundles. Please delete all %type bundles.', array('%type' => $this->entity->label())) . '</p>';
       $form['description'] = array('#markup' => $warning_message);
-      $form['title'] = $this->getQuestion();
       return $form;
     }
 
-    return parent::buildForm($form, $form_state);;
+    return parent::buildForm($form, $form_state);
   }
 
   /**

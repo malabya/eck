@@ -9,7 +9,7 @@ namespace Drupal\eck\Permission;
 
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eck\Entity\EckEntityBundle;
+use Drupal\eck\Entity\EckEntityType;
 
 /**
  * Defines dynamic permissions.
@@ -29,7 +29,7 @@ class EckPermissions {
   public function entityTypePermissions() {
     $perms = array();
     // Generate entity permissions for all entity types.
-    foreach (EckEntityBundle::loadMultiple() as $eck_type) {
+    foreach (EckEntityType::loadMultiple() as $eck_type) {
       $perms = array_merge($perms, $this->buildPermissions($eck_type));
     }
 
@@ -39,40 +39,50 @@ class EckPermissions {
   /**
    * Builds a standard list of entity permissions for a given type.
    *
-   * @param EckEntityBundle $eck_type
+   * @param EckEntityType $eck_type
    *   The entity type.
    *
    * @return array
    *   An array of permissions.
    */
-  public function buildPermissions(EckEntityBundle $eck_type) {
+  public function buildPermissions(EckEntityType $eck_type) {
     $type_id = $eck_type->id();
     $type_params = array('%type_name' => $eck_type->label());
 
-    return array(
-      "create $type_id entity" => array(
-        'title' => $this->t('%type_name: Create new entity', $type_params),
-      ),
-      "edit own $type_id entity" => array(
-        'title' => $this->t('%type_name: Edit own entity', $type_params),
-      ),
-      "edit any $type_id entity" => array(
-        'title' => $this->t('%type_name: Edit any entity', $type_params),
-      ),
-      "delete own $type_id entity" => array(
-        'title' => $this->t('%type_name: Delete own entity', $type_params),
-      ),
-      "delete any $type_id entity" => array(
-        'title' => $this->t('%type_name: Delete any entity', $type_params),
-      ),
-      "view own $type_id entity" => array(
-        'title' => $this->t('%type_name: View own entity', $type_params),
-      ),
-      "view any $type_id entity" => array(
-        'title' => $this->t('%type_name: View any entity', $type_params),
-      ),
-    );
+    $create_permission = [
+      "create {$type_id} entities" => [
+        'title' => $this->t('Create new %type_name entities', $type_params),
+      ],
+    ];
 
+    $own_permissions = [];
+    if ($eck_type->uid) {
+      $own_permissions = [
+        "edit own {$type_id} entities" => [
+          'title' => $this->t('Edit own %type_name entities', $type_params),
+        ],
+        "delete own {$type_id} entities" => [
+          'title' => $this->t('Delete own %type_name entities', $type_params),
+        ],
+        "view own {$type_id} entities" => [
+          'title' => $this->t('View own %type_name entities', $type_params),
+        ],
+      ];
+    }
+
+    $any_permissions = [
+      "edit any {$type_id} entities" => [
+        'title' => $this->t('Edit any %type_name entities', $type_params),
+      ],
+      "delete any {$type_id} entities" => [
+        'title' => $this->t('Delete any %type_name entities', $type_params),
+      ],
+      "view any {$type_id} entities" => [
+        'title' => $this->t('View any %type_name entities', $type_params),
+      ],
+    ];
+
+    return array_merge($create_permission, $own_permissions, $any_permissions);
   }
 
 }

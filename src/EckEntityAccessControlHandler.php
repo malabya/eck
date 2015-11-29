@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Access controller for the comment entity.
+ * Access controller for the EckEntity entity.
  *
  * @ingroup eck
  *
@@ -31,13 +31,9 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
       $result = AccessResult::allowed()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
-    // Check if the user has permission to access eck entities.
-    if (!$account->hasPermission('access eck entities')) {
-      $result = AccessResult::forbidden()->cachePerPermissions();
-      return $return_as_object ? $result : $result->isAllowed();
-    }
 
-    $result = parent::access($entity, $operation, $account, TRUE)->cachePerPermissions();
+    $result = parent::access($entity, $operation, $account, TRUE)
+      ->cachePerPermissions();
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -53,13 +49,9 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
 
       return $return_as_object ? $result : $result->isAllowed();
     }
-    // Check if the user has permission to access eck entities.
-    if (!$account->hasPermission('access eck entities')) {
-      $result = AccessResult::forbidden()->cachePerPermissions();
-      return $return_as_object ? $result : $result->isAllowed();
-    }
 
-    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerPermissions();
+    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)
+      ->cachePerPermissions();
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -68,18 +60,28 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    $permissions[] = $operation . ' any ' . $entity->getEntityTypeId() . ' entities';
+    /** @var \Drupal\eck\Entity\EckEntity $entity */
     if ($entity->getOwnerId() == $account->id()) {
-      return AccessResult::allowedIfHasPermission($account, $operation . ' own ' . $entity->bundle() . ' entity');
+      $permissions[] = $operation . ' own ' . $entity->getEntityTypeId() . ' entities';
     }
 
-    return AccessResult::allowedIfHasPermission($account, $operation . ' any ' . $entity->bundle() . ' entity');
+    return AccessResult::allowedIfHasPermissions($account, $permissions, 'OR');
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' entity'))->cachePerPermissions();
+    $permissions = [
+      'create ' . $this->entityTypeId . ' entities',
+    ];
+
+    if (!empty($entity_bundle)) {
+      $permissions[] = 'create ' . $this->entityTypeId . ' entities of bundle ' . $entity_bundle;
+    }
+    return AccessResult::allowedIfHasPermissions($account, $permissions, 'OR')
+      ->cachePerPermissions();
   }
 
 }

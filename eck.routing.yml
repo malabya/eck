@@ -43,7 +43,7 @@ eck.entity.add_page:
     _title_callback: '\Drupal\eck\Controller\EckContentController::addPageTitle'
     _controller: '\Drupal\eck\Controller\EckContentController::addPage'
   requirements:
-    _eck_entity_add_access: '{eck_entity_type}'
+    _eck_entity_create_access: '{eck_entity_type}'
   options:
     parameters:
       eck_entity_type:
@@ -55,7 +55,7 @@ eck.entity.add:
     _controller: '\Drupal\eck\Controller\EckContentController::add'
     _title_callback: '\Drupal\eck\Controller\EckContentController::addContentPageTitle'
   requirements:
-    _eck_entity_add_access: '{eck_entity_type}'
+    _eck_entity_create_access: '{eck_entity_type}'
   options:
     parameters:
       eck_entity_type:

@@ -18,9 +18,6 @@ administer eck entities:
   title: 'Administer ECK entites'
   description: 'Create, edit, delete and perform other tasks across all ECK entities.'
   restrict access: true
-access eck entities:
-  title: 'Access eck entities'
-  description: 'Access for eck entities. This permission has to be granted to create, delete, edit, view any ECK entity'
 
 permission_callbacks:
   - '\Drupal\eck\Permission\EckPermissions::entityTypePermissions'

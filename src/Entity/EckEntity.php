@@ -24,35 +24,38 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(
-    EntityStorageInterface $storage_controller,
-    array &$values
-  ) {
+  public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
-    $values += array(
-      'uid' => \Drupal::currentUser()->id(),
-    );
+    $values += array('uid' => \Drupal::currentUser()->id());
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOwner() {
-    return $this->get('uid')->entity;
+    if ($this->hasField('uid')) {
+      return $this->get('uid');
+    }
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOwnerId() {
-    return $this->get('uid')->target_id;
+    if ($this->hasField('uid')) {
+      return $this->getOwner()->first()->target_id;
+    }
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setOwnerId($uid) {
-    $this->set('uid', $uid);
+    if ($this->hasField('uid')) {
+      $this->set('uid', $uid);
+    }
 
     return $this;
   }
@@ -61,7 +64,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    * {@inheritdoc}
    */
   public function setOwner(UserInterface $account) {
-    $this->set('uid', $account->id());
+    $this->setOwnerId($account->id());
 
     return $this;
   }
@@ -71,7 +74,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    */
   public function label() {
     if ($this->hasField('title')) {
-      return $this->get('title')->view(['label' => 'hidden']);
+      return $this->get('title')->first()->getString();
     }
     else {
       return '';

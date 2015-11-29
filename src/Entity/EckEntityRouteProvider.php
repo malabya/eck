@@ -24,64 +24,36 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
   public function getRoutes(EntityTypeInterface $entity_type) {
     $route_collection = new RouteCollection();
 
-    // Get all entity types.
-    $eck_types = EckEntityType::loadMultiple();
+    foreach (EckEntityType::loadMultiple() as $eck_type) {
+      $view_defaults = [
+        '_entity_view' => $eck_type->id,
+        '_title' => $eck_type->label,
+      ];
+      $route_view = new Route('admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}');
+      $route_view->addDefaults($view_defaults);
+      $route_view->setRequirement('_entity_access', $eck_type->id . '.view');
+      $route_collection->add("entity.{$eck_type->id}.canonical", $route_view);
 
-    foreach ($eck_types as $eck_type) {
-      // Route for view.
-      $route_view = (
-      new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}'
-      )
-      )
-        ->addDefaults(
-          array(
-            '_entity_view' => $eck_type->id,
-            '_title' => $eck_type->label,
-          )
-        )
-        ->setRequirement('_entity_access', $eck_type->id . '.view');
-
-      // Add the route.
-      $route_collection->add(
-        'entity.' . $eck_type->id . '.canonical',
-        $route_view
-      );
-
-      // Route for edit.
-      $route_edit = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit',
-        array(
-          '_entity_form' => $eck_type->id . '.edit',
-          '_title' => 'Edit' . $eck_type->label,
-        ),
-        array(
-          '_entity_access' => $eck_type->id . '.edit',
-        )
-      );
-      // Add the route.
-      $route_collection->add(
-        'entity.' . $eck_type->id . '.edit_form',
-        $route_edit
-      );
+      $edit_defaults = [
+        '_entity_form' => $eck_type->id . '.edit',
+        '_title' => 'Edit' . $eck_type->label,
+      ];
+      $route_edit = new Route('admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/edit');
+      $route_edit->addDefaults($edit_defaults);
+      $route_edit->setRequirement('_entity_access', $eck_type->id . '.edit');
+      $route_collection->add("entity.{$eck_type->id}.edit_form", $route_edit);
 
       // Route for delete.
-      $route_delete = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete',
-        array(
-          '_entity_form' => $eck_type->id . '.delete',
-          '_title' => 'Delete' . $eck_type->label,
-        ),
-        array(
-          '_entity_access' => $eck_type->id . '.delete',
-        )
-      );
-      // Add the route.
-      $route_collection->add(
-        'entity.' . $eck_type->id . '.delete_form',
-        $route_delete
-      );
+      $delete_defaults = [
+        '_entity_form' => $eck_type->id . '.delete',
+        '_title' => 'Delete' . $eck_type->label,
+      ];
+      $route_delete = new Route('admin/structure/eck/entity/' . $eck_type->id . '/{' . $eck_type->id . '}/delete');
+      $route_delete->addDefaults($delete_defaults);
+      $route_delete->setRequirement('_entity_access', $eck_type->id . '.delete');
+      $route_collection->add("entity.{$eck_type->id}.delete_form", $route_delete);
     }
+
     return $route_collection;
   }
 

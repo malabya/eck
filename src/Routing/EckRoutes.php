@@ -36,7 +36,7 @@ class EckRoutes {
           '_title_arguments' => ['%type' => ucfirst($eck_type->label())],
         ),
         array(
-          '_permission' => 'access eck entities+bypass eck entity access',
+          '_permission' => "view own {$eck_type->id} entities+view any {$eck_type->id} entities+bypass eck entity access",
         )
       );
       // Add the route.
