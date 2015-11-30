@@ -26,6 +26,7 @@ use Drupal\eck\EckEntityTypeInterface;
  *       "delete" = "Drupal\eck\Form\EntityType\EckEntityTypeDeleteForm"
  *     }
  *   },
+ *   admin_permission = "administer eck entities",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

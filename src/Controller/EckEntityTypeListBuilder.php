@@ -74,7 +74,6 @@ class EckEntityTypeListBuilder extends ConfigEntityListBuilder {
       }
     }
 
-    // Add link to list operation.
     $row['operations']['data']['#links']['bundle_list'] = [
       'title' => $this->t('Bundle list'),
       'url' => new Url('eck.entity.' . $entity->id() . '_type.list'),

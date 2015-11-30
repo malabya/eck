@@ -86,6 +86,8 @@ class EckUITest extends EckTestBase {
     }
     $this->assertLink(t('Add bundle'));
     $this->assertLink(t('Bundle list'));
+    $this->assertLink(t('Edit'));
+    $this->assertLink(t('Delete'));
 
     $bundles[] = $this->createEntityBundle($entityType['id']);
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
@@ -93,6 +95,8 @@ class EckUITest extends EckTestBase {
     $this->assertNoLink(t('Content list'), t('No %option option is shown when there is no content.', ['%option' => t('Content list')]));
     $this->assertLink(t('Add content'));
     $this->assertLink(t('Bundle list'));
+    $this->assertLink(t('Edit'));
+    $this->assertLink(t('Delete'));
 
     // Since there is only one bundle. The add content link should point
     // directly to the correct add entity form. We should be able to add a new
@@ -106,6 +110,8 @@ class EckUITest extends EckTestBase {
     $this->assertLink(t('Content list'));
     $this->assertLink(t('Add content'));
     $this->assertLink(t('Bundle list'));
+    $this->assertLink(t('Edit'));
+    $this->assertLink(t('Delete'));
 
     // If there are multiple bundles, clicking the add Content button should end
     // up with a choice between all available bundles.
