@@ -147,18 +147,47 @@ function eck_entity_type_build(array &$entity_types) {
  * Implements hook_menu_local_actions_alter().
  */
 function eck_menu_local_actions_alter(&$local_actions) {
-  // Adds some dynamic actions.
   $eck_types = EckEntityType::loadMultiple();
+  /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundleInfo */
+  $bundleInfo = \Drupal::service('entity_type.bundle.info');
+  $bundles = $bundleInfo->getAllBundleInfo();
+
+  $defaults = [
+    'class' => 'Drupal\Core\Menu\LocalActionDefault',
+    'provider' => 'eck',
+    'options' => [],
+    'weight' => 0,
+  ];
+
   foreach ($eck_types as $name => $type) {
-    $local_actions['eck.bundle.' . $type->id . '.add'] = array(
-      'route_name' => 'eck.entity.' . $type->id . '_type.add',
-      'title' => 'Add ' . $type->label . ' bundle',
-      'class' => 'Drupal\Core\Menu\LocalActionDefault',
-      'provider' => 'eck',
-      'appears_on' => array(
-        'eck.entity.' . $type->id . '_type.list',
-      ),
-    );
+    $local_actions['eck.bundle.' . $type->id() . '.add'] = $defaults + [
+      'route_name' => 'eck.entity.' . $type->id() . '_type.add',
+      'title' => 'Add ' . $type->label() . ' bundle',
+      'appears_on' => [
+        'eck.entity.' . $type->id() . '_type.list',
+      ],
+    ];
+
+    if (isset($bundles[$type->id()])) {
+      $bundle_machine_names = array_keys($bundles[$type->id()]);
+      $local_actions['eck.' . $type->id() . '.add'] = $defaults + [
+        'title' => 'Add ' . $type->label(),
+        'appears_on' => [
+          'eck.entity.' . $type->id() . '.list',
+        ],
+        'route_parameters' => [
+          'eck_entity_type' => $type->id(),
+        ],
+      ];
+
+      if (count($bundle_machine_names) === 1) {
+        $local_actions['eck.' . $type->id() . '.add']['route_name'] = 'eck.entity.add';
+        $local_actions['eck.' . $type->id() . '.add']['route_parameters']['eck_entity_bundle'] = reset($bundle_machine_names);
+      }
+      else{
+        $local_actions['eck.' . $type->id() . '.add']['route_name'] = 'eck.entity.add_page';
+      }
+    }
   }
 }
 

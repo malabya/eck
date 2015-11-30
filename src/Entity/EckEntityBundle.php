@@ -87,6 +87,9 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
 
     // Clear the cache.
     $storage->resetCache(array($entities));
+    // Clear all caches because the action links need to be regenerated.
+    // @todo figure out how to do this without clearing ALL caches.
+    drupal_flush_all_caches();
   }
 
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
@@ -97,10 +100,12 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     \Drupal::entityTypeManager()->getStorage(
       $this->getEntityType()->getBundleOf()
     )->create(['type' => $this->id()]);
-
     // @todo set up config dependencies.
 
     \Drupal::entityManager()->clearCachedFieldDefinitions();
+    // Clear all caches because the action links need to be regenerated.
+    // @todo figure out how to do this without clearing ALL caches.
+    drupal_flush_all_caches();
   }
 
   /**

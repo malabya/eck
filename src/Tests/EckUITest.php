@@ -70,9 +70,9 @@ class EckUITest extends EckTestBase {
   }
 
   /**
-   * Makes sure the operations on the entity listing page work as expected.
+   * Makes sure the operations on the entity type listing page work as expected.
    */
-  public function testEntityListingOperations() {
+  public function testEntityTypeListingOperations() {
     $entityManager = \Drupal::entityTypeManager();
     $entity = $entityManager->getDefinition('eck_entity_type');
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
@@ -121,6 +121,40 @@ class EckUITest extends EckTestBase {
     foreach ($bundles as $bundle) {
       $this->assertRaw($bundle['name']);
     }
+  }
+
+  /**
+   * Tests that the entity listing contains the correct local actions.
+   */
+  public function testAddEntityActions() {
+    $entityType = $this->createEntityType();
+    // No content can be added without the bundle, the link should therefor not
+    // be present if there are no bundles.
+    $this->drupalGet(Url::fromRoute("eck.entity.{$entityType['id']}.list"));
+    $this->assertNoRaw("Add {$entityType['label']}");
+
+    $bundles[] = $this->createEntityBundle($entityType['id']);
+    // The action link should link directly to the add entity form if there is
+    // only one bundle present.
+    $this->drupalGet(Url::fromRoute("eck.entity.{$entityType['id']}.list"));
+    $this->clickLink("Add {$entityType['label']}");
+    $this->assertField('title[0][value]');
+
+    $bundles[] = $this->createEntityBundle($entityType['id']);
+    // When there are multiple bundles available. The user should be able to
+    // choose which bundle to use.
+    $this->drupalGet(Url::fromRoute("eck.entity.{$entityType['id']}.list"));
+    $this->clickLink("Add {$entityType['label']}");
+    foreach ($bundles as $bundle) {
+      $this->assertRaw($bundle['name']);
+    }
+
+    // After deleting the bundle, the user should once again end up on the add
+    // entity form when clicking the action link.
+    $this->drupalPostForm("admin/structure/eck/entity/{$entityType['id']}/types/manage/{$bundles[1]['type']}/delete", [], t('Delete'));
+    $this->drupalGet(Url::fromRoute("eck.entity.{$entityType['id']}.list"));
+    $this->clickLink("Add {$entityType['label']}");
+    $this->assertField('title[0][value]');
   }
 
 }
