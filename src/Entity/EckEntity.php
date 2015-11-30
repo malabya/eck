@@ -74,11 +74,12 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    */
   public function label() {
     if ($this->hasField('title')) {
-      return $this->get('title')->first()->getString();
+      $title = $this->get('title')->first();
+      if (!empty($title)) {
+        return $title->getString();
+      }
     }
-    else {
-      return '';
-    }
+    return '';
   }
 
   /**
