@@ -92,6 +92,17 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     drupal_flush_all_caches();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $this->addDependency('config', 'eck.eck_entity_type.' . $this->getEntityType()->getBundleOf());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
     // Update workflow options.
@@ -100,7 +111,6 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     \Drupal::entityTypeManager()->getStorage(
       $this->getEntityType()->getBundleOf()
     )->create(['type' => $this->id()]);
-    // @todo set up config dependencies.
 
     \Drupal::entityManager()->clearCachedFieldDefinitions();
     // Clear all caches because the action links need to be regenerated.

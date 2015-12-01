@@ -5,11 +5,31 @@
  */
 function eck_update_8001() {
   $entity_types = \Drupal::entityTypeManager()->getStorage('eck_entity_type')->loadMultiple();
+  $names = [];
   foreach ($entity_types as $entity_type) {
-    $entity_type->uid = TRUE;
-    $entity_type->title = TRUE;
-    $entity_type->created = TRUE;
-    $entity_type->changed = TRUE;
-    $entity_type->save();
+    $names[] = "eck.eck_entity_type.{$entity_type->id()}";
+  }
+
+  foreach ($names as $name) {
+    $config = \Drupal::configFactory()->getEditable($name);
+    $data = $config->getRawData();
+    foreach (['uid', 'title', 'created', 'changed'] as $field) {
+      $data[$field] = TRUE;
+    }
+    $config->setData($data);
+    $config->save();
+  }
+
+  drupal_flush_all_caches();
+  \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+}
+
+/**
+ * Re-save all bundles for all entities to set the correct dependencies.
+ */
+function eck_update_8002() {
+  $bundles = \Drupal\eck\Entity\EckEntityBundle::loadMultiple();
+  foreach ($bundles as $bundle) {
+    $bundle->save();
   }
 }
