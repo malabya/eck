@@ -79,7 +79,9 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Create an edit link.
+    // Clear the router cache to prevent RouteNotFoundException while creating
+    // the edit link.
+    \Drupal::service('router.builder')->rebuild();
     $edit_link = $this->l(t('Edit'), $this->urlInfo());
 
     if ($update) {
@@ -96,7 +98,6 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
 
       // Clear caches first.
       $entity_manager->clearCachedDefinitions();
-      \Drupal::service('router.builder')->rebuild();
 
       // Notify storage to create the database schema.
       $entity_type = $entity_manager->getDefinition($this->id());
