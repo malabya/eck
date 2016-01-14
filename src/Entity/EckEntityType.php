@@ -84,30 +84,26 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     \Drupal::service('router.builder')->rebuild();
     $edit_link = $this->l(t('Edit'), $this->urlInfo());
 
-    if ($update) {
-       // Update the field definitions.
-       \Drupal::entityDefinitionUpdateManager()->applyUpdates();
-
-      $this->logger($this->id())->notice(
+    if ($update) {$this->logger($this->id())->notice(
         'Entity type %label has been updated.',
         ['%label' => $this->label(), 'link' => $edit_link]
       );
     }
     else {
-      $entity_manager = $this->entityManager();
-
       // Clear caches first.
-      $entity_manager->clearCachedDefinitions();
+      $this->entityTypeManager()->clearCachedDefinitions();
 
       // Notify storage to create the database schema.
-      $entity_type = $entity_manager->getDefinition($this->id());
-      $entity_manager->onEntityTypeCreate($entity_type);
+      $entity_type = $this->entityTypeManager()->getDefinition($this->id());
+      $this->entityManager()->onEntityTypeCreate($entity_type);
 
       $this->logger($this->id())->notice(
         'Entity type %label has been added.',
         ['%label' => $this->label(), 'link' => $edit_link]
       );
     }
+
+    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
   }
 
   /**

@@ -11,6 +11,8 @@ use Drupal\Core\Url;
  * Tests if eck's UI elements are working properly.
  *
  * @group eck
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
 class EckUITest extends EckTestBase {
 
@@ -89,7 +91,7 @@ class EckUITest extends EckTestBase {
     $this->assertLink(t('Edit'));
     $this->assertLink(t('Delete'));
 
-    $bundles[] = $this->createEntityBundle($entityType['id']);
+    $bundles[] = $this->createEntityBundle($entityType['id'], $entityType['id']);
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
     $this->assertNoText(t('There is no @label yet.', array('@label' => $entity->getLabel())));
     $this->assertNoLink(t('Content list'), t('No %option option is shown when there is no content.', ['%option' => t('Content list')]));

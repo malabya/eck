@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Base class for eck tests
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
 abstract class EckTestBase extends WebTestBase {
 
@@ -82,8 +84,10 @@ abstract class EckTestBase extends WebTestBase {
    * @return array
    *  The machine name and label of the new bundle.
    */
-  protected function createEntityBundle($entity_type) {
-    $label = $this->randomMachineName();
+  protected function createEntityBundle($entity_type, $label = '') {
+    if (empty($label)) {
+      $label = $this->randomMachineName();
+    }
     $bundle = strtolower($label);
 
     $edit = [

@@ -9,7 +9,12 @@ namespace Drupal\eck\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Url;
+use Drupal\eck\EckEntityTypeBundleInfo;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a listing of ECK entities.
@@ -17,6 +22,42 @@ use Drupal\Core\Url;
  * @ingroup eck
  */
 class EckEntityTypeListBuilder extends ConfigEntityListBuilder {
+
+  /**
+   * @var \Drupal\eck\EckEntityTypeBundleInfo $eckBundleInfo
+   */
+  protected $eckBundleInfo;
+
+  /**
+   * @var \Drupal\Core\Entity\Query\QueryFactory $queryFactory
+   */
+  protected $queryFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('eck.entity_type.bundle.info'),
+      $container->get('entity.query')
+    );
+  }
+
+  /**
+   * Constructs a new EntityListBuilder object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EckEntityTypeBundleInfo $bundle_info, QueryFactory $query_factory) {
+    parent::__construct($entity_type, $storage);
+    $this->eckBundleInfo = $bundle_info;
+    $this->queryFactory = $query_factory;
+  }
 
   /**
    * {@inheritdoc}
@@ -35,36 +76,31 @@ class EckEntityTypeListBuilder extends ConfigEntityListBuilder {
     $row['label'] = $entity->label();
     $row['machine_name'] = $entity->id();
 
-    /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundleInfo */
-    $bundleInfo = \Drupal::service('entity_type.bundle.info');
-    $bundles = $bundleInfo->getBundleInfo($entity->id());
-
-    $bundles_present = TRUE;
-    if (empty($bundles) || count($bundles) == 1 && isset($bundles[$entity->id()])) {
-      $bundles_present = FALSE;
-    }
-
-    if (!$bundles_present) {
+    if (!$this->eckBundleInfo->entityTypeHasBundles($entity->id())) {
       $row['operations']['data']['#links']['add_bundle'] = [
         'title' => $this->t('Add bundle'),
         'url' => new Url('eck.entity.' . $entity->id() . '_type.add'),
       ];
     }
-
-    if ($bundles_present) {
+    else {
       // Add link to list operation.
       $row['operations']['data']['#links']['add_content'] = [
         'title' => $this->t('Add content'),
         'url' => new Url('eck.entity.add_page', ['eck_entity_type' => $entity->id()]),
       ];
       // Directly link to the add entity page if there is only one bundle.
-      if (count($bundles) == 1) {
-        $bundle_machine_names = array_keys($bundles);
-        $arguments = ['eck_entity_type' => $entity->id(), 'eck_entity_bundle' => reset($bundle_machine_names)];
+      if ($this->eckBundleInfo->entityTypeBundleCount($entity->id()) === 1) {
+        $bundle_machine_names = $this->eckBundleInfo->getEntityTypeBundleMachineNames($entity->id());
+        $arguments = [
+          'eck_entity_type' => $entity->id(),
+          'eck_entity_bundle' => reset($bundle_machine_names),
+        ];
         $row['operations']['data']['#links']['add_content']['url'] = new Url('eck.entity.add', $arguments);
       }
 
-      $contentExists = (bool) \Drupal::entityQuery($entity->id())->range(0, 1)->execute();
+      $contentExists = (bool) $this->queryFactory->get($entity->id())
+        ->range(0, 1)
+        ->execute();
       if ($contentExists) {
         // Add link to list operation.
         $row['operations']['data']['#links']['content_list'] = [

@@ -13,6 +13,8 @@ use Drupal\simpletest\WebTestBase;
  * Class EckConfigImportTest
  *
  * @group eck
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
 class EckConfigImportTest extends WebTestBase {
 

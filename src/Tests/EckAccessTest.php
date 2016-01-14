@@ -12,6 +12,8 @@ use Drupal\Core\Url;
  * Tests eck's access control.
  *
  * @group eck
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
 class EckAccessTest extends EckTestBase {
 

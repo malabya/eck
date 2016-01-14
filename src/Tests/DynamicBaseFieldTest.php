@@ -13,6 +13,8 @@ use Drupal\Core\Url;
  * Tests the functioning of eck's dynamic base fields.
  *
  * @group eck
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
 class DynamicBaseFieldTest extends EckTestBase {
 
