@@ -45,44 +45,36 @@ class EckPermissions {
    * @return array
    *   An array of permissions.
    */
-  public function buildPermissions(EckEntityType $eck_type) {
-    $type_id = $eck_type->id();
-    $type_params = array('%type_name' => $eck_type->label());
+  private function buildPermissions(EckEntityType $eck_type) {
+    return array_merge($this->getCreatePermission($eck_type), $this->getEditPermissions($eck_type));
+  }
 
-    $create_permission = [
-      "create {$type_id} entities" => [
-        'title' => $this->t('Create new %type_name entities', $type_params),
+  private function getCreatePermission(EckEntityType $entity_type) {
+    return [
+      "create {$entity_type->id()} entities" => [
+        'title' => $this->t('Create new %type_name entities', ['%type_name' => $entity_type->label()]),
       ],
     ];
+  }
 
-    $own_permissions = [];
-    if ($eck_type->uid) {
-      $own_permissions = [
-        "edit own {$type_id} entities" => [
-          'title' => $this->t('Edit own %type_name entities', $type_params),
-        ],
-        "delete own {$type_id} entities" => [
-          'title' => $this->t('Delete own %type_name entities', $type_params),
-        ],
-        "view own {$type_id} entities" => [
-          'title' => $this->t('View own %type_name entities', $type_params),
-        ],
-      ];
+  private function getEditPermissions(EckEntityType $entity_type) {
+    $permissions = [];
+    foreach (['edit', 'delete', 'view'] as $op) {
+      $permissions = array_merge($permissions, $this->getEditPermission($entity_type, $op, 'any'));
+      if ($entity_type->hasAuthorField()) {
+        $permissions = array_merge($permissions, $this->getEditPermission($entity_type, $op, 'own'));
+      }
     }
+    return $permissions;
+  }
 
-    $any_permissions = [
-      "edit any {$type_id} entities" => [
-        'title' => $this->t('Edit any %type_name entities', $type_params),
-      ],
-      "delete any {$type_id} entities" => [
-        'title' => $this->t('Delete any %type_name entities', $type_params),
-      ],
-      "view any {$type_id} entities" => [
-        'title' => $this->t('View any %type_name entities', $type_params),
-      ],
+  private function getEditPermission(EckEntityType $entity_type, $op, $ownership) {
+    $ucfirst_op = ucfirst($op);
+    return [
+      "{$op} {$ownership} {$entity_type->id()} entities" => [
+        'title' => $this->t("{$ucfirst_op} {$ownership} %type_name entities", ['%type_name' => $entity_type->label()]),
+      ]
     ];
-
-    return array_merge($create_permission, $own_permissions, $any_permissions);
   }
 
 }

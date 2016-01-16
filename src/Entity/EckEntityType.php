@@ -53,25 +53,32 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
   use LinkGeneratorTrait;
 
   /**
-   * The ECK entity type ID.
+   * If this entity type has an "Author" base field.
    *
-   * @var string
+   * @var boolean
    */
-  public $id;
+  protected $uid;
 
   /**
-   * The ECK entity type UUID.
+   * If this entity type has a "Title" base field.
    *
-   * @var string
+   * @var boolean
    */
-  public $uuid;
+  protected $title;
 
   /**
-   * The ECK entity type label.
+   * If this entity type has a "Created" base field.
    *
-   * @var string
+   * @var boolean
    */
-  public $label;
+  protected $created;
+
+  /**
+   * If this entity type has a "Changed" base field.
+   *
+   * @var boolean
+   */
+  protected $changed;
 
   /**
    * {@inheritdoc}
@@ -119,32 +126,20 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     return \Drupal::getContainer()->get('logger.factory')->get($channel);
   }
 
-  /**
-   * If this entity type has an "Author" base field.
-   *
-   * @var boolean
-   */
-  public $uid;
+  public function hasAuthorField() {
+    return isset($this->uid) && $this->uid;
+  }
 
-  /**
-   * If this entity type has a "Title" base field.
-   *
-   * @var boolean
-   */
-  public $title;
+  public function hasChangedField() {
+    return isset($this->changed) && $this->changed;
+  }
 
-  /**
-   * If this entity type has a "Created" base field.
-   *
-   * @var boolean
-   */
-  public $created;
+  public function hasCreatedField() {
+    return isset($this->created) && $this->created;
+  }
 
-  /**
-   * If this entity type has a "Changed" base field.
-   *
-   * @var boolean
-   */
-  public $changed;
+  public function hasTitleField() {
+    return isset($this->title) && $this->title;
+  }
 
 }
