@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file contains \Drupal\eck\Tests\EckAccessTest
+ * @file
+ * Contains \Drupal\eck\Tests\AccessTest
  */
 
 namespace Drupal\eck\Tests;
@@ -15,7 +16,7 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class EckAccessTest extends EckTestBase {
+class AccessTest extends TestBase {
 
   /**
    * @var

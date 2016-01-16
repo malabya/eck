@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *  contains \Drupal\eck\Tests\ActionTest
+ *  Contains \Drupal\eck\Tests\UITest.
  */
 
 namespace Drupal\eck\Tests;
@@ -14,7 +14,7 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class EckUITest extends EckTestBase {
+class UITest extends TestBase {
 
   /**
    * Modules to install.

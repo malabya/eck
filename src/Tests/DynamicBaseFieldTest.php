@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\eck\Tests\DynamicBaseFieldTest
+ * Contains \Drupal\eck\Tests\DynamicBaseFieldTest.
  */
 
 namespace Drupal\eck\Tests;
@@ -16,7 +16,7 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class DynamicBaseFieldTest extends EckTestBase {
+class DynamicBaseFieldTest extends TestBase {
 
   public function testBaseFieldCRUD() {
     // Create the entity type.

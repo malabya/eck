@@ -1,14 +1,20 @@
 <?php
 
-namespace Drupal\eck\Tests;
+/**
+ * @file
+ * Contains \Drupal\eck\Tests\EntityCreateUpdateTest.
+ */
 
+namespace Drupal\eck\Tests;
 
 /**
  * Tests if eck entities are correctly created and updated
  *
  * @group eck
+ *
+ * @codeCoverageIgnore because we don't have to test the tests
  */
-class EckEntityCreateUpdateTest extends EckTestBase {
+class EntityCreateUpdateTest extends TestBase {
 
   public function testIfEntityCreationDoesNotResultInMismatchedEntityDefinitions() {
     $this->drupalLogin($this->drupalCreateUser([],[], TRUE));

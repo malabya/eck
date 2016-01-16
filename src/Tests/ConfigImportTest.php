@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @ file contains \Drupal\eck\Tests\EckConfigImportTest.
+ * @file
+ * Contains \Drupal\eck\Tests\ConfigImportTest.
  */
 
 namespace Drupal\eck\Tests;
@@ -10,13 +11,13 @@ use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Class EckConfigImportTest
+ * Class ConfigImportTest
  *
  * @group eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class EckConfigImportTest extends WebTestBase {
+class ConfigImportTest extends WebTestBase {
 
   protected $profile = 'standard';
 

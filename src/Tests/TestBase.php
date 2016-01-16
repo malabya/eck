@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\eck\Tests\EckTestBase
+ * Contains \Drupal\eck\Tests\TestBase.
  */
 
 namespace Drupal\eck\Tests;
@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-abstract class EckTestBase extends WebTestBase {
+abstract class TestBase extends WebTestBase {
 
   /**
    * Modules to install.
