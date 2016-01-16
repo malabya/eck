@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\Tests\eck\Unit\EckEntityTypeBundleInfoTest.
+ * Contains Drupal\Tests\eck\Unit\EntityTypeBundleInfoTest.
  */
 
 namespace Drupal\Tests\eck\Unit;
@@ -12,7 +12,7 @@ use PHPUnit_Framework_MockObject_MockObject;
  *
  * @group eck
  */
-class EckEntityTypeBundleInfoTest extends UnitTestBase {
+class EntityTypeBundleInfoTest extends UnitTestBase {
 
   protected $entityTypeManagerMock;
   protected $languageManagerMock;
