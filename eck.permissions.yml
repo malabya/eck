@@ -20,4 +20,4 @@ administer eck entities:
   restrict access: true
 
 permission_callbacks:
-  - '\Drupal\eck\Permission\EckPermissions::entityTypePermissions'
+  - '\Drupal\eck\PermissionsGenerator::entityPermissions'
