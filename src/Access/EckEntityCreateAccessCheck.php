@@ -9,6 +9,7 @@ namespace Drupal\eck\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eck\EckEntityTypeInterface;
@@ -18,21 +19,17 @@ use Drupal\eck\EckEntityTypeInterface;
  */
 class EckEntityCreateAccessCheck implements AccessInterface {
 
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager.
-   */
-  protected $entityManager;
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager. */
+  protected $entityTypeManager;
 
   /**
    * Constructs an EckEntityCreateAccessCheck object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -49,12 +46,12 @@ class EckEntityCreateAccessCheck implements AccessInterface {
    *   A \Drupal\Core\Access\AccessInterface constant value.
    */
   public function access(AccountInterface $account, EckEntityTypeInterface $eck_entity_type, $eck_entity_bundle = NULL) {
-    $access_control_handler = $this->entityManager->getAccessControlHandler($eck_entity_type->id());
+    $access_control_handler = $this->entityTypeManager->getAccessControlHandler($eck_entity_type->id());
     if (!empty($eck_entity_bundle)) {
       return $access_control_handler->createAccess($eck_entity_bundle, $account, array(), TRUE);
     }
     // Get the entity type bundles.
-    $bundles = $this->entityManager->getStorage($eck_entity_type->id() . '_type')->loadMultiple();
+    $bundles = $this->entityTypeManager->getStorage($eck_entity_type->id() . '_type')->loadMultiple();
 
     // If checking whether an entity of any type may be created.
     foreach ($bundles as $eck_entity_bundle) {
