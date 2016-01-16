@@ -22,38 +22,50 @@ use Drupal\Core\Session\AccountInterface;
 class EckEntityAccessControlHandler extends EntityAccessControlHandler {
 
   /**
+   * Determines if the given account is allowed to bypass access control.
+   *
+   * @param \Drupal\Core\Session\AccountInterface|NULL $account
+   *
+   * @return bool
+   */
+  private function canBypassAccessCheck(AccountInterface $account = NULL) {
+    $account = $this->prepareUser($account);
+    return $account->hasPermission('bypass eck entity access');
+  }
+
+  /**
+   * Generates an AccessResult.
+   *
+   * @param $return_as_object
+   * @return \Drupal\Core\Access\AccessResult|bool
+   */
+  private function getBypassAccessResult($return_as_object) {
+      $result = AccessResult::allowed()->cachePerPermissions();
+      return $return_as_object ? $result : $result->isAllowed();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function access(EntityInterface $entity, $operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $account = $this->prepareUser($account);
-    // Checks for bypass permission.
-    if ($account->hasPermission('bypass eck entity access')) {
-      $result = AccessResult::allowed()->cachePerPermissions();
-      return $return_as_object ? $result : $result->isAllowed();
+    if ($this->canBypassAccessCheck($account)){
+      return $this->getBypassAccessResult($return_as_object);
     }
-
-    $result = parent::access($entity, $operation, $account, TRUE)
-      ->cachePerPermissions();
-
-    return $return_as_object ? $result : $result->isAllowed();
+    else {
+      return parent::access($entity, $operation, $account, $return_as_object);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
-    $account = $this->prepareUser($account);
-    // Checks for bypass permission.
-    if ($account->hasPermission('bypass eck entity access') && $account) {
-      $result = AccessResult::allowed()->cachePerPermissions();
-
-      return $return_as_object ? $result : $result->isAllowed();
+    if ($this->canBypassAccessCheck($account)){
+      return $this->getBypassAccessResult($return_as_object);
     }
-
-    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)
-      ->cachePerPermissions();
-
-    return $return_as_object ? $result : $result->isAllowed();
+    else {
+      return parent::createAccess($entity_bundle, $account, $context, $return_as_object);
+    }
   }
 
   /**
