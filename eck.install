@@ -33,3 +33,11 @@ function eck_update_8002() {
     $bundle->save();
   }
 }
+
+/**
+ * Update entity definitions to fix any mismatched entities.
+ * @see https://www.drupal.org/node/2646412
+ */
+function eck_update_8003() {
+  \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+}
