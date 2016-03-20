@@ -120,6 +120,8 @@ function eck_entity_type_build(array &$entity_types) {
           'bundle_entity_type' => $eck_type->id . '_type',
           'field_ui_base_route' => 'entity.' . $eck_type->id . '_type.edit_form',
           'permission_granularity' => 'bundle',
+          'group' => 'content',
+          'group_label' => t('Content'),
         );
         // Merge the definitions.
         $definition = array_merge($definition, $base_definition);
@@ -132,6 +134,8 @@ function eck_entity_type_build(array &$entity_types) {
           'label' => t('%entity_type type', array('%entity_type' => $eck_type->label)),
           'bundle_of' => $eck_type->id,
           'config_prefix' => 'eck_type.' . $eck_type->id,
+          'group' => 'configuration',
+          'group_label' => t('Configuration'),
           'links' => array(
             'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/edit',
             'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/delete',
