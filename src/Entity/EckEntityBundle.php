@@ -16,7 +16,7 @@ use Drupal\eck\EckEntityBundleInterface;
  *
  * @ConfigEntityType(
  *   id = "eck_entity_bundle",
- *   label = @Translation("Content type"),
+ *   label = @Translation("ECK entity bundle"),
  *   handlers = {
  *     "access" = "Drupal\eck\EckEntityAccessControlHandler",
  *     "form" = {
