@@ -5,6 +5,7 @@
  */
 
 namespace Drupal\Tests\eck\Unit;
+use Drupal\eck\EckEntityTypeBundleInfo;
 use PHPUnit_Framework_MockObject_MockObject;
 
 /**
@@ -116,7 +117,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
-   * @return \Drupal\eck\EckEntityTypeBundleInfo
+   * @return EckEntityTypeBundleInfo
    */
   protected function createNewTestSubject() {
     if (!isset($this->entityTypeManagerMock)) {
@@ -136,14 +137,14 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
       $this->cacheBackendMock = $this->getMockForAbstractClass('\Drupal\Core\Cache\CacheBackendInterface');
     }
 
-    return new \Drupal\eck\EckEntityTypeBundleInfo($this->entityTypeManagerMock, $this->languageManagerMock, $this->moduleHandlerMock, $this->typedDataManagerMock, $this->cacheBackendMock);
+    return new EckEntityTypeBundleInfo($this->entityTypeManagerMock, $this->languageManagerMock, $this->moduleHandlerMock, $this->typedDataManagerMock, $this->cacheBackendMock);
   }
 
   /**
    * @param PHPUnit_Framework_MockObject_MockObject $entity_type_mock
    * @param PHPUnit_Framework_MockObject_MockObject $entity_storage_mock
    *
-   * @return \Drupal\eck\EckEntityTypeBundleInfo
+   * @return EckEntityTypeBundleInfo
    */
   protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entity_type_mock = NULL, PHPUnit_Framework_MockObject_MockObject$entity_storage_mock = NULL) {
     if (!isset($entity_type_mock)) {
@@ -168,7 +169,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   /**
    * @param int $number_of_bundles
    *
-   * @return \Drupal\eck\EckEntityTypeBundleInfo
+   * @return EckEntityTypeBundleInfo
    */
   protected function createNewTestSubjectWithEntityTypeAndBundles($number_of_bundles = 1) {
     $bundles = [];
