@@ -5,6 +5,13 @@
  */
 
 namespace Drupal\Tests\eck\Unit;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\eck\EckEntityTypeBundleInfo;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -49,7 +56,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    * @test
    */
   public function cachesData() {
-    $this->cacheBackendMock = $this->cacheBackendMock = $this->getMockForAbstractClass('\Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheBackendMock = $this->cacheBackendMock = $this->getMockForAbstractClass(CacheBackendInterface::class);
     $this->cacheBackendMock->expects($this->once())->method('set');
     $sut = $this->createNewTestSubject();
     $sut->entityTypeHasBundles('test');
@@ -59,7 +66,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    * @test
    */
   public function usesCachedDataWhenAvailable() {
-    $this->cacheBackendMock = $this->cacheBackendMock = $this->getMockForAbstractClass('\Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheBackendMock = $this->cacheBackendMock = $this->getMockForAbstractClass(CacheBackendInterface::class);
     $this->cacheBackendMock->expects($this->once())->method('get')->willReturn((object) ['data' =>'test']);
 
     $sut = $this->createNewTestSubject();
@@ -121,20 +128,20 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    */
   protected function createNewTestSubject() {
     if (!isset($this->entityTypeManagerMock)) {
-      $this->entityTypeManagerMock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityTypeManagerInterface');
+      $this->entityTypeManagerMock = $this->getMockForAbstractClass(EntityTypeManagerInterface::class);
       $this->entityTypeManagerMock->method('getDefinitions')->willReturn([]);
     }
     if (!isset($this->languageManagerMock)) {
       $this->languageManagerMock = $this->createLanguageManagerMock();
     }
     if (!isset($this->moduleHandlerMock)) {
-      $this->moduleHandlerMock = $this->getMockForAbstractClass('\Drupal\Core\Extension\ModuleHandlerInterface');
+      $this->moduleHandlerMock = $this->getMockForAbstractClass(ModuleHandlerInterface::class);
     }
     if (!isset($this->typedDataManagerMock)) {
-      $this->typedDataManagerMock = $this->getMockForAbstractClass('\Drupal\Core\TypedData\TypedDataManagerInterface');
+      $this->typedDataManagerMock = $this->getMockForAbstractClass(TypedDataManagerInterface::class);
     }
     if (!isset($this->cacheBackendMock)) {
-      $this->cacheBackendMock = $this->getMockForAbstractClass('\Drupal\Core\Cache\CacheBackendInterface');
+      $this->cacheBackendMock = $this->getMockForAbstractClass(CacheBackendInterface::class);
     }
 
     return new EckEntityTypeBundleInfo($this->entityTypeManagerMock, $this->languageManagerMock, $this->moduleHandlerMock, $this->typedDataManagerMock, $this->cacheBackendMock);
@@ -148,16 +155,16 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    */
   protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entity_type_mock = NULL, PHPUnit_Framework_MockObject_MockObject$entity_storage_mock = NULL) {
     if (!isset($entity_type_mock)) {
-      $entity_type_mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityTypeInterface');
+      $entity_type_mock = $this->getMockForAbstractClass(EntityTypeInterface::class);
       $entity_type_mock->method('getBundleEntityType')
         ->willReturn('eck_entity_bundle');
     }
     if (!isset($entity_storage_mock)) {
-      $entity_storage_mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityStorageInterface');
+      $entity_storage_mock = $this->getMockForAbstractClass(EntityStorageInterface::class);
       $entity_storage_mock->method('loadMultiple')->willReturn([]);
     }
 
-    $this->entityTypeManagerMock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityTypeManagerMock = $this->getMockForAbstractClass(EntityTypeManagerInterface::class);
     $this->entityTypeManagerMock->method('getDefinitions')
       ->willReturn(['existing_entity_type' => $entity_type_mock]);
     $this->entityTypeManagerMock->method('getStorage')
@@ -175,12 +182,12 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
     $bundles = [];
     for ($i = 0; $i < $number_of_bundles; $i++) {
       $machine_name = $this->randomMachineName();
-      $bundle_mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityInterface');
+      $bundle_mock = $this->getMockForAbstractClass(EntityInterface::class);
       $bundle_mock->method('id')->willReturn(strtolower($machine_name));
       $bundle_mock->method('label')->willReturn($machine_name);
       $bundles[strtolower($machine_name)] = $bundle_mock;
     }
-    $entity_storage_mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityStorageInterface');
+    $entity_storage_mock = $this->getMockForAbstractClass(EntityStorageInterface::class);
     $entity_storage_mock->method('loadMultiple')->willReturn($bundles);
     return $this->createNewTestSubjectWithEntityType(NULL, $entity_storage_mock);
   }
