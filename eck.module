@@ -131,7 +131,7 @@ function eck_entity_type_build(array &$entity_types) {
         // Definitions for the entity types bundle.
         $bundle_definition = array(
           'id' => $eck_type->id . '_type',
-          'label' => t('%entity_type type', array('%entity_type' => $eck_type->label)),
+          'label' => t('@entity_type type', array('@entity_type' => $eck_type->label)),
           'bundle_of' => $eck_type->id,
           'config_prefix' => 'eck_type.' . $eck_type->id,
           'group' => 'configuration',
