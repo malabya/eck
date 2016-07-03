@@ -67,6 +67,7 @@ class EckEntityTypeFormBase extends EntityForm {
     $form['id'] = array(
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
+      '#maxlength' => 32,
       '#default_value' => $eck_entity_type->id(),
       '#machine_name' => array(
         'exists' => array($this, 'exists'),
