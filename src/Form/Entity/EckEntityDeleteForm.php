@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Form\Entity\EckEntityDeleteForm.
- */
-
 namespace Drupal\eck\Form\Entity;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;

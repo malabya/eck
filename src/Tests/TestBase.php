@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Tests\TestBase.
- */
-
 namespace Drupal\eck\Tests;
 
 use Drupal\Core\Url;

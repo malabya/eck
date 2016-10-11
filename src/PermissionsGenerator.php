@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Permission\PermissionsGenerator.
- */
-
 namespace Drupal\eck;
 
 use Drupal\Core\Routing\UrlGeneratorTrait;

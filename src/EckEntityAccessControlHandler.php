@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\EckEntityAccessControlHandler.
- */
-
 namespace Drupal\eck;
 
 use Drupal\Core\Access\AccessResult;

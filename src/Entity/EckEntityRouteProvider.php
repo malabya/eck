@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Entity\EckEntityRouteProvider.
- */
-
 namespace Drupal\eck\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;

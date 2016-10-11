@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Routing\EckRoutes.
- */
-
 namespace Drupal\eck\Routing;
 
 use Drupal\eck\Entity\EckEntityType;

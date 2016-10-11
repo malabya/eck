@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\Tests\eck\Unit\EntityTypeBundleInfoTest.
- */
 
 namespace Drupal\Tests\eck\Unit;
 use Drupal\Core\Cache\CacheBackendInterface;

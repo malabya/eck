@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Form\EntityBundle\EckEntityBundleForm.
- */
-
 namespace Drupal\eck\Form\EntityBundle;
 
 use Drupal\Core\Entity\EntityForm;

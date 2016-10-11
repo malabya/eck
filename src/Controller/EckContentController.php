@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Controller\EckContentController.
- */
-
 namespace Drupal\eck\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

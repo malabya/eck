@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Tests\EntityCreateUpdateTest.
- */
-
 namespace Drupal\eck\Tests;
 
 /**

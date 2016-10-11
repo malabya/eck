@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Tests\ConfigImportTest.
- */
-
 namespace Drupal\eck\Tests;
 
 use Drupal\Core\Url;

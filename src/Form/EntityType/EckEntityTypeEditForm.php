@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Form\EntityType\EckEntityTypeEditForm.
- */
-
 namespace Drupal\eck\Form\EntityType;
 
 use Drupal\Core\Form\FormStateInterface;

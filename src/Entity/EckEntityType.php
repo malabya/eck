@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\eck\Entity\EckEntityType.
- */
-
 namespace Drupal\eck\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

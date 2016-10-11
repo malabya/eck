@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\EckEntityBundleInterface.
- */
-
 namespace Drupal\eck;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

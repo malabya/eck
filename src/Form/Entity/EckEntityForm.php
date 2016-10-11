@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Form\Entity\EckEntityForm.
- */
-
 namespace Drupal\eck\Form\Entity;
 
 use Drupal\Core\Entity\ContentEntityForm;

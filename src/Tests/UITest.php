@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- *  Contains \Drupal\eck\Tests\UITest.
- */
 
 namespace Drupal\eck\Tests;
 use Drupal\Core\Url;

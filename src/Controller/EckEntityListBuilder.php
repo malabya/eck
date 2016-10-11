@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\Controller\EckEntityListBuilder.
- */
-
 namespace Drupal\eck\Controller;
 
 use Drupal\Core\Entity\EntityInterface;

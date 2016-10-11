@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\Tests\eck\Unit\PermissionsGeneratorTest.
- */
 
 namespace Drupal\Tests\eck\Unit;
 

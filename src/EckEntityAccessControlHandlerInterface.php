@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\eck\EckEntityControlAccessHandlerInterface.
- */
-
 namespace Drupal\eck;
 
 /**
