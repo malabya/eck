@@ -3,7 +3,7 @@
 # This schema tells the config system how to read the config YML files.
 
 eck.eck_entity_type.*:
-  type: mapping
+  type: config_entity
   label: 'ECK Entity Type'
   mapping:
     id:
@@ -12,15 +12,6 @@ eck.eck_entity_type.*:
     label:
       type: label
       label: 'Name'
-    langcode:
-      type: string
-      label: 'Langcode'
-    status:
-      type: boolean
-      label: 'Status'
-    dependencies:
-      type: mapping
-      label: 'Dependencies'
     uid:
       type: boolean
       label: 'Author'
@@ -33,9 +24,6 @@ eck.eck_entity_type.*:
     title:
       type: boolean
       label: 'Title'
-    uuid:
-      type: string
-      label: 'uuid'
 
 eck.eck_type.*:
   type: config_entity
