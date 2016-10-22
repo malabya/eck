@@ -173,7 +173,7 @@ function eck_menu_local_actions_alter(&$local_actions) {
   foreach ($eck_types as $name => $type) {
     $local_actions['eck.bundle.' . $type->id() . '.add'] = $defaults + [
       'route_name' => 'eck.entity.' . $type->id() . '_type.add',
-      'title' => 'Add ' . $type->label() . ' bundle',
+      'title' => t('Add @label bundle', array('@label' => $type->label())),
       'appears_on' => [
         'eck.entity.' . $type->id() . '_type.list',
       ],
@@ -182,7 +182,7 @@ function eck_menu_local_actions_alter(&$local_actions) {
     if ($eckBundleInfo->entityTypeHasBundles($type->id())) {
       $bundle_machine_names = $eckBundleInfo->getEntityTypeBundleMachineNames($type->id());
       $local_actions['eck.' . $type->id() . '.add'] = $defaults + [
-        'title' => 'Add ' . $type->label(),
+        'title' => t('Add @label', array('@label' => $type->label())),
         'appears_on' => [
           'eck.entity.' . $type->id() . '.list',
         ],
