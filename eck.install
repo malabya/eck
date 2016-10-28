@@ -4,7 +4,9 @@
  * Enable all base fields for existing ECK entity types.
  */
 function eck_update_8001() {
-  $entity_types = \Drupal::entityTypeManager()->getStorage('eck_entity_type')->loadMultiple();
+  $entity_types = \Drupal::entityTypeManager()
+    ->getStorage('eck_entity_type')
+    ->loadMultiple();
   $names = [];
   foreach ($entity_types as $entity_type) {
     $names[] = "eck.eck_entity_type.{$entity_type->id()}";
