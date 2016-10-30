@@ -4,6 +4,7 @@ namespace Drupal\eck\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -17,9 +18,7 @@ class EckEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build['description'] = array(
-      '#markup' => $this->t('Entity settings'),
-    );
+    $build['description'] = ['#markup' => $this->t('Entity settings')];
     $build['table'] = parent::render();
 
     return $build;
@@ -39,17 +38,12 @@ class EckEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\eck\Entity\EckEntity */
+    $entityTypeId = $entity->getEntityTypeId();
+    $route = "entity.{$entityTypeId}.canonical";
+    $routeArguments = [$entityTypeId => $entity->id()];
+
     $row['id'] = $entity->id();
-    $row['title'] = \Drupal::l(
-      $entity->label(),
-      Url::fromRoute(
-        'entity.' . $this->entityTypeId . '.canonical',
-        array(
-          $this->entityTypeId => $entity->id(),
-        )
-      )
-    );
+    $row['title'] = new Link($entity->label(), Url::fromRoute($route, $routeArguments));
 
     return array_merge($row, parent::buildRow($entity));
   }
