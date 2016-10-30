@@ -17,89 +17,110 @@ class EckRoutes {
    * {@inheritdoc}
    */
   public function routes() {
-    $route_collection = new RouteCollection();
-    // Get all entity types.
-    $eck_types = EckEntityType::loadMultiple();
+    $routeCollection = new RouteCollection();
 
-    foreach ($eck_types as $eck_type) {
-      // Route for list.
-      $route_list = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id,
-        array(
-          '_entity_list' => $eck_type->id,
-          '_title' => '%type content',
-          '_title_arguments' => ['%type' => ucfirst($eck_type->label())],
-        ),
-        array(
-          '_permission' => "view own {$eck_type->id} entities+view any {$eck_type->id} entities+bypass eck entity access",
-        )
-      );
-      // Add the route.
-      $route_collection->add('eck.entity.' . $eck_type->id . '.list', $route_list);
+    /** @var EckEntityType $entityType */
+    foreach (EckEntityType::loadMultiple() as $entityType) {
+      $entityTypeId = $entityType->id();
+      $entityTypeLabel = $entityType->label();
 
-      // Route for type list.
-      $route_type_list = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/types',
-        array(
-          '_controller' => '\Drupal\Core\Entity\Controller\EntityListController::listing',
-          'entity_type' => $eck_type->id . '_type',
-          '_title' => '%type bundles',
-          '_title_arguments' => ['%type' => ucfirst($eck_type->label())],
-        ),
-        array(
-          '_permission' => 'administer eck entity bundles',
-        )
-      );
-      // Add the route.
-      $route_collection->add('eck.entity.' . $eck_type->id . '_type.list', $route_type_list);
-
-      // Route for type add.
-      $route_type_add = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/types/add',
-        array(
-          '_entity_form' => $eck_type->id . '_type.add',
-          '_title' => 'Add %type bundle',
-          '_title_arguments' => ['%type' => $eck_type->label()],
-        ),
-        array(
-          '_permission' => 'administer eck entity bundles',
-        )
-      );
-      // Add the route.
-      $route_collection->add('eck.entity.' . $eck_type->id . '_type.add', $route_type_add);
-
-      // Route for type edit.
-      $route_type_edit = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}',
-        array(
-          '_entity_form' => $eck_type->id . '_type.edit',
-          '_title' => 'Edit %type bundle',
-          '_title_arguments' => ['%type' => $eck_type->label()],
-        ),
-        array(
-          '_permission' => 'administer eck entity bundles',
-        )
-      );
-      // Add the route.
-      $route_collection->add('entity.' . $eck_type->id . '_type.edit_form', $route_type_edit);
-
-      // Route for type delete.
-      $route_type_delete = new Route(
-        'admin/structure/eck/entity/' . $eck_type->id . '/types/manage/{' . $eck_type->id . '_type}/delete',
-        array(
-          '_entity_form' => $eck_type->id . '_type.delete',
-          '_title' => 'Delete %type bundle',
-          '_title_arguments' => ['%type' => $eck_type->label()],
-        ),
-        array(
-          '_permission' => 'administer eck entity bundles',
-        )
-      );
-      // Add the route.
-      $route_collection->add('entity.' . $eck_type->id . '_type.delete_form', $route_type_delete);
+      $routeCollection->add("eck.entity.{$entityTypeId}.list", $this->createListRoute($entityTypeId, $entityTypeLabel));
+      $routeCollection->add("eck.entity.{$entityTypeId}_type.list", $this->createBundleListRoute($entityTypeId, $entityTypeLabel));
+      $routeCollection->add("eck.entity.{$entityTypeId}_type.add", $this->createAddBundleRoute($entityTypeId, $entityTypeLabel));
+      $routeCollection->add("entity.{$entityTypeId}_type.edit_form", $this->createEditBundleRoute($entityTypeId, $entityTypeLabel));
+      $routeCollection->add("entity.{$entityTypeId}_type.delete_form", $this->createDeleteBundleRoute($entityTypeId, $entityTypeLabel));
     }
-
-    return $route_collection;
+    return $routeCollection;
   }
 
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createListRoute($entityTypeId, $entityTypeLabel) {
+    $path = 'admin/structure/eck/entity/' . $entityTypeId;
+    $defaults = [
+      '_entity_list' => $entityTypeId,
+      '_title' => '%type content',
+      '_title_arguments' => ['%type' => ucfirst($entityTypeLabel)],
+    ];
+    $permissions = [
+      "view own {$entityTypeId} entities",
+      "view any {$entityTypeId} entities",
+      "bypass eck entity access",
+    ];
+    $requirements = ['_permission' => implode('+', $permissions)];
+    return new Route($path, $defaults, $requirements);
+  }
+
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createBundleListRoute($entityTypeId, $entityTypeLabel) {
+    $path = "admin/structure/eck/entity/{$entityTypeId}/types";
+    $defaults = [
+      '_controller' => '\Drupal\Core\Entity\Controller\EntityListController::listing',
+      'entity_type' => "{$entityTypeId}_type",
+      '_title' => '%type bundles',
+      '_title_arguments' => ['%type' => ucfirst($entityTypeLabel)],
+    ];
+    return new Route($path, $defaults, $this->getBundleRouteRequirements());
+  }
+
+  /**
+   * @return array
+   */
+  private function getBundleRouteRequirements() {
+    return ['_permission' => 'administer eck entity bundles'];
+  }
+
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createAddBundleRoute($entityTypeId, $entityTypeLabel) {
+    $path = "admin/structure/eck/entity/{$entityTypeId}/types/add";
+    return $this->createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, "add");
+  }
+
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @param $path
+   * @param $op
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, $op) {
+    $defaults = [
+      '_entity_form' => "{$entityTypeId}_type.{$op}",
+      '_title' => ucfirst("{$op} %type bundle"),
+      '_title_arguments' => ['%type' => $entityTypeLabel],
+    ];
+    return new Route($path, $defaults, $this->getBundleRouteRequirements());
+  }
+
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createEditBundleRoute($entityTypeId, $entityTypeLabel) {
+    $path = "admin/structure/eck/entity/{$entityTypeId}/types/manage/{{$entityTypeId}_type}";
+    return $this->createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, "edit");
+  }
+
+
+  /**
+   * @param string $entityTypeId
+   * @param string $entityTypeLabel
+   * @return \Symfony\Component\Routing\Route
+   */
+  private function createDeleteBundleRoute($entityTypeId, $entityTypeLabel) {
+    $path = "admin/structure/eck/entity/{$entityTypeId}/types/manage/{{$entityTypeId}_type}/delete";
+    return $this->createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, "delete");
+  }
 }
