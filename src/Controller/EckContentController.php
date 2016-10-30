@@ -52,23 +52,25 @@ class EckContentController extends ControllerBase implements ContainerInjectionI
    *   The output as a renderable array.
    */
   public function addPage(EckEntityTypeInterface $eck_entity_type) {
-    $content = array();
-    $entity_type_bundle = $eck_entity_type->id() . '_type';
-    // Only use types the user has access to.
-    foreach ($this->entityManager()->getStorage($entity_type_bundle)->loadMultiple() as $bundle) {
-      if ($this->entityManager()->getAccessControlHandler($eck_entity_type->id())->createAccess($bundle->type)) {
+    $content = [];
+    $entityTypeBundle = "{$eck_entity_type->id()}_type";
+    $entityTypeManager = $this->entityTypeManager();
+
+    /** @var EckEntityBundle $bundle */
+    foreach ($entityTypeManager->getStorage($entityTypeBundle)->loadMultiple() as $bundle) {
+      if ($entityTypeManager->getAccessControlHandler($eck_entity_type->id())->createAccess($bundle->type)) {
         $content[$bundle->type] = $bundle;
       }
     }
 
-    return array(
+    return [
       '#theme' => 'eck_content_add_list',
       '#content' => $content,
-      '#entity_type' => array(
+      '#entity_type' => [
         'id' => $eck_entity_type->id(),
-        'label' => $this->entityManager()->getStorage($entity_type_bundle)->getEntityType()->getLabel(),
-      ),
-    );
+        'label' => $eck_entity_type->label(),
+      ],
+    ];
   }
 
   /**
@@ -83,14 +85,10 @@ class EckContentController extends ControllerBase implements ContainerInjectionI
    *   The entity submission form.
    */
   public function add(EckEntityTypeInterface $eck_entity_type, $eck_entity_bundle) {
-    $entity_type = $this->entityManager()->getStorage($eck_entity_type->id());
-    // Create an entity.
-    $entity = $entity_type->create(
-      array(
-        'type' => $eck_entity_bundle,
-      )
-    );
-    // Get the form and return it.
+    $entityStorage = $this->entityTypeManager()->getStorage($eck_entity_type->id());
+
+    $entity = $entityStorage->create(['type' => $eck_entity_bundle]);
+
     return $this->entityFormBuilder()->getForm($entity);
   }
 
@@ -104,8 +102,7 @@ class EckContentController extends ControllerBase implements ContainerInjectionI
    *   The title.
    */
   public function addPageTitle(EckEntityTypeInterface $eck_entity_type) {
-
-    return t('Add %label content', array('%label' => $eck_entity_type->label()));
+    return $this->t('Add %label content', ['%label' => $eck_entity_type->label()]);
   }
 
   /**
@@ -119,7 +116,7 @@ class EckContentController extends ControllerBase implements ContainerInjectionI
    */
   public function addContentPageTitle($eck_entity_bundle) {
     $eck_entity_bundle = EckEntityBundle::load($eck_entity_bundle);
-    return t('Add %label content', array('%label' => $eck_entity_bundle->get('name')));
+    return $this->t('Add %label content', ['%label' => $eck_entity_bundle->get('name')]);
   }
 
 }
