@@ -8,7 +8,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Class ConfigImportTest
  *
- * @group eck
+ * @group Eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
@@ -21,44 +21,47 @@ class ConfigImportTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('eck');
+  public static $modules = ['eck'];
 
   protected function setUp() {
     parent::setUp();
 
-    $user = $this->drupalCreateUser(array(
+    $permissions = [
       'export configuration',
       'synchronize configuration',
       'administer eck entity types',
       'administer eck entities',
       'administer eck entity bundles',
       'bypass eck entity access',
-    ));
-    $this->drupalLogin($user);
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
 
     // Export the current configuration.
+    $configFactory = \Drupal::configFactory();
     $sync = $this->container->get('config.storage.sync');
-    $config = \Drupal::configFactory()->loadMultiple(\Drupal::configFactory()->listAll());
+    $config = $configFactory->loadMultiple($configFactory->listAll());
     foreach ($config as $name => $conf) {
       $sync->write($name, $conf->getRawData());
     }
   }
 
   public function testImport() {
-    $entity_type_config_name = 'eck.eck_entity_type.test_entity';
-    $entity_bundle_config_name = 'eck.eck_type.test_entity.bundle';
+    $defaultLanguage = \Drupal::languageManager()->getDefaultLanguage();
+
+    $entityTypeConfigName = 'eck.eck_entity_type.test_entity';
+    $entityBundleConfigName = 'eck.eck_type.test_entity.bundle';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
-    $this->assertFalse($storage->exists($entity_type_config_name), t('Entity config not found.'));
-    $this->assertFalse($storage->exists($entity_bundle_config_name), t('Bundle config not found.'));
+    $this->assertFalse($storage->exists($entityTypeConfigName), 'Entity config absent as expected.');
+    $this->assertFalse($storage->exists($entityBundleConfigName), 'Bundle config absent as expected');
 
     // Create entity type config entity.
-    $entity_type_config = [
+    $entityTypeConfiguration = [
       'id' => 'test_entity',
       'label' => 'Test entity',
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+      'langcode' => $defaultLanguage->getId(),
       'dependencies' => [],
       'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
       'status' => TRUE,
@@ -67,28 +70,29 @@ class ConfigImportTest extends WebTestBase {
       'changed' => TRUE,
       'title' => TRUE,
     ];
-    $sync->write($entity_type_config_name, $entity_type_config);
+    $sync->write($entityTypeConfigName, $entityTypeConfiguration);
+
     // Create entity bundle config entity.
-    $entity_bundle_config = [
+    $entityBundleConfiguration = [
       'uuid' => '44bb277a-8358-4bc4-b439-577b0cb96820',
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+      'langcode' => $defaultLanguage->getId(),
       'status' => TRUE,
       'dependencies' => [],
       'name' => 'Bundle',
       'type' => 'bundle',
       'description' => '',
     ];
-    $sync->write($entity_bundle_config_name, $entity_bundle_config);
+    $sync->write($entityBundleConfigName, $entityBundleConfiguration);
 
     // Import the configuration.
-    $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
+    $this->drupalPostForm(Url::fromRoute('config.sync'), [], t('Import all'));
 
     // Verify the values appeared.
-    $config = $this->config($entity_type_config_name);
-    $this->assertEqual($config->getRawData(), $entity_type_config, t('Entity type config imported successfully.'));
+    $config = $this->config($entityTypeConfigName);
+    $this->assertEqual($config->getRawData(), $entityTypeConfiguration, 'Entity type configuration imported successfully.');
     // Verify the values appeared.
-    $config = $this->config($entity_bundle_config_name);
-    $this->assertEqual($config->getRawData(), $entity_bundle_config, t('Entity bundle config imported successfully.'));
+    $config = $this->config($entityBundleConfigName);
+    $this->assertEqual($config->getRawData(), $entityBundleConfiguration, 'Entity bundle configuration imported successfully.');
 
     // Verify the entity type has been added.
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
@@ -96,7 +100,12 @@ class ConfigImportTest extends WebTestBase {
 
     // Test if a new entity can be created.
     $edit = ['title[0][value]' => $this->randomMachineName()];
-    $this->drupalPostForm('/admin/structure/eck/test_entity/add/bundle', $edit, t('Save'));
+    $route = 'eck.entity.add';
+    $routeArguments = [
+      'eck_entity_type' => 'test_entity',
+      'eck_entity_bundle' => 'bundle'
+        ];
+    $this->drupalPostForm(Url::fromRoute($route, $routeArguments), $edit, t('Save'));
     $this->assertRaw($edit['title[0][value]']);
   }
 
