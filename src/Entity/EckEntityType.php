@@ -86,7 +86,8 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     \Drupal::service('router.builder')->rebuild();
     $edit_link = $this->l(t('Edit'), $this->urlInfo());
 
-    if ($update) {$this->logger($this->id())->notice(
+    if ($update) {
+      $this->logger($this->id())->notice(
         'Entity type %label has been updated.',
         ['%label' => $this->label(), 'link' => $edit_link]
       );
