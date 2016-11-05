@@ -21,13 +21,15 @@ abstract class TestBase extends WebTestBase {
 
   public function setUp() {
     parent::setUp();
-    $user = $this->createUser([
+
+    $permissions = [
       'administer eck entity types',
       'administer eck entities',
       'administer eck entity bundles',
       'bypass eck entity access',
-    ]);
-    $this->drupallogin($user);
+    ];
+    $user = $this->createUser($permissions);
+    $this->drupalLogin($user);
   }
 
   /**
@@ -89,7 +91,7 @@ abstract class TestBase extends WebTestBase {
       'name' => $label,
       'type' => $bundle,
     ];
-    $this->drupalPostForm("admin/structure/eck/entity/{$entity_type}/types/add", $edit, t('Save bundle'));
+    $this->drupalPostForm(Url::fromRoute("eck.entity.{$entity_type}_type.add"), $edit, t('Save bundle'));
     $this->assertRaw(t('The entity bundle %name has been added.', ['%name' => $label]));
 
     return $edit;
