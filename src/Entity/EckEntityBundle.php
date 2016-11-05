@@ -33,30 +33,26 @@ use Drupal\eck\EckEntityBundleInterface;
 class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleInterface {
 
   /**
-   * The machine name of this ECK entity bundle.
-   *
    * @var string
+   * The machine name of this ECK entity bundle.
    */
   public $type;
 
   /**
-   * The human-readable name of the ECK entity type.
-   *
    * @var string
+   * The human-readable name of the ECK entity type.
    */
   public $name;
 
   /**
-   * A brief description of this ECK bundle.
-   *
    * @var string
+   * A brief description of this ECK bundle.
    */
   public $description;
 
   /**
-   * Help information shown to the user when creating an Entity of this bundle.
-   *
    * @var string
+   * Help information shown to the user when creating an Entity of this bundle.
    */
   public $help;
 
@@ -81,7 +77,7 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     parent::postDelete($storage, $entities);
 
     // Clear the cache.
-    $storage->resetCache(array($entities));
+    $storage->resetCache([$entities]);
     // Clear all caches because the action links need to be regenerated.
     // @todo figure out how to do this without clearing ALL caches.
     drupal_flush_all_caches();
@@ -92,7 +88,7 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $this->addDependency('config', 'eck.eck_entity_type.' . $this->getEntityType()->getBundleOf());
+    $this->addDependency('config', "eck.eck_entity_type.{$this->getEckEntityTypeMachineName()}");
   }
 
   /**
@@ -103,9 +99,8 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     // Update workflow options.
     // @todo Make it possible to get default values without an entity.
     //   https://www.drupal.org/node/2318187
-    \Drupal::entityTypeManager()->getStorage(
-      $this->getEntityType()->getBundleOf()
-    )->create(['type' => $this->id()]);
+    $eckEntityStorage = \Drupal::entityTypeManager()->getStorage($this->getEckEntityTypeMachineName());
+    $eckEntityStorage->create(['type' => $this->id()]);
 
     \Drupal::entityManager()->clearCachedFieldDefinitions();
     // Clear all caches because the action links need to be regenerated.
@@ -127,11 +122,12 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
   public static function loadMultiple(array $ids = NULL) {
     // Because we use a single class for multiple entity bundles we need to
     // parse all entity types and load the bundles.
-    $entity_manager = \Drupal::entityManager();
+    $entity_manager = \Drupal::entityTypeManager();
     $bundles = array();
+    /** @var EckEntityType $entity */
     foreach (EckEntityType::loadMultiple() as $entity) {
-      $bundles = array_merge($bundles, $entity_manager->getStorage($entity->id() . '_type')
-        ->loadMultiple($ids));
+      $bundleStorage = $entity_manager->getStorage($entity->id() . '_type');
+      $bundles = array_merge($bundles, $bundleStorage->loadMultiple($ids));
     }
 
     return $bundles;
@@ -141,17 +137,15 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
    * {@inheritdoc}
    */
   public static function load($id) {
-    // Because we use a single class for multiple entity bundles we need to
-    // parse all entity types and find the id.
-    // @todo remove code duplication by using $this->loadMultiple().
-    $entity_manager = \Drupal::entityManager();
-    $loaded_entity = NULL;
-    foreach (EckEntityType::loadMultiple() as $entity) {
-      $load = $entity_manager->getStorage($entity->id() . '_type')->load($id);
-      $loaded_entity = empty($load) ? $loaded_entity : $load;;
-    }
+    $entities = self::loadMultiple([$id]);
+    return reset($entities);
+  }
 
-    return $loaded_entity;
+  /**
+   * @return null|string
+   */
+  public function getEckEntityTypeMachineName() {
+    return $this->getEntityType()->getBundleOf();
   }
 
 }
