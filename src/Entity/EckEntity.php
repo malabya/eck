@@ -21,7 +21,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
-    $values += array('uid' => \Drupal::currentUser()->id());
+    $values += ['uid' => \Drupal::currentUser()->id()];
   }
 
   /**
@@ -80,8 +80,8 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $config = \Drupal::config('eck.eck_entity_type.' . $entity_type->id());
+  public static function baseFieldDefinitions(EntityTypeInterface $entityType) {
+    $config = \Drupal::config("eck.eck_entity_type.{$entityType->id()}");
     // The primary key field.
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Entity ID'))
@@ -99,7 +99,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
     $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setDescription(t('The entity type.'))
-      ->setSetting('target_type', $entity_type->id() . '_type')
+      ->setSetting('target_type', "{$entityType->id()}_type")
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
@@ -188,7 +188,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         ->setLabel(t('Changed'))
         ->setDescription(t('The time that the entity was last edited.'))
         ->setTranslatable(TRUE)
-        ->setDisplayConfigurable('view', TRUE);;
+        ->setDisplayConfigurable('view', TRUE);
     }
 
     return $fields;
