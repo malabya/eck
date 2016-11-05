@@ -6,7 +6,7 @@ use Drupal\Core\Url;
 /**
  * Tests if eck's UI elements are working properly.
  *
- * @group eck
+ * @group Eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
@@ -47,23 +47,23 @@ class UITest extends TestBase {
     $this->assertRaw("ECK Entity Types");
 
     // Test title of the entity bundles listing.
-    $this->drupalGet(Url::fromRoute('eck.entity.' . $type['id'] . '_type.list'));
+    $this->drupalGet(Url::fromRoute("eck.entity.{$type['id']}_type.list"));
     $this->assertRaw(t('%type bundles', ['%type' => ucfirst($type['label'])]));
 
     // Test title of the add bundle page.
-    $this->drupalGet(Url::fromRoute('eck.entity.' . $type['id'] . '_type.add'));
+    $this->drupalGet(Url::fromRoute("eck.entity.{$type['id']}_type.add"));
     $this->assertRaw(t('Add %type bundle', ['%type' => $type['label']]));
 
     // Test title of the edit bundle page.
-    $this->drupalGet(Url::fromRoute('entity.' . $type['id'] . '_type.edit_form', [$type['id'] . '_type' => $bundle['type']]));
+    $this->drupalGet(Url::fromRoute("entity.{$type['id']}_type.edit_form", ["{$type['id']}_type" => $bundle['type']]));
     $this->assertRaw(t('Edit %type bundle', ['%type' => $type['label']]));
 
     // Test title of the delete bundle page.
-    $this->drupalGet(Url::fromRoute('entity.' . $type['id'] . '_type.delete_form', [$type['id'] . '_type' => $bundle['type']]));
+    $this->drupalGet(Url::fromRoute("entity.{$type['id']}_type.delete_form", ["{$type['id']}_type" => $bundle['type']]));
     $this->assertRaw(t('Are you sure you want to delete the entity bundle %type?', ['%type' => $bundle['name']]));
 
     // Test title of the entity content listing.
-    $this->drupalGet(Url::fromRoute('eck.entity.' . $type['id'] . '.list'));
+    $this->drupalGet(Url::fromRoute("eck.entity.{$type['id']}.list"));
     $this->assertRaw(t('%type content', ['%type' => ucfirst($type['label'])]));
   }
 
@@ -149,7 +149,9 @@ class UITest extends TestBase {
 
     // After deleting the bundle, the user should once again end up on the add
     // entity form when clicking the action link.
-    $this->drupalPostForm("admin/structure/eck/entity/{$entityType['id']}/types/manage/{$bundles[1]['type']}/delete", [], t('Delete'));
+    $route = "entity.{$entityType['id']}_type.delete_form";
+    $routeArguments = ["{$entityType['id']}_type" => $bundles[1]['type']];
+    $this->drupalPostForm(Url::fromRoute($route, $routeArguments), [], t('Delete'));
     $this->drupalGet(Url::fromRoute("eck.entity.{$entityType['id']}.list"));
     $this->clickLink("Add {$entityType['label']}");
     $this->assertField('title[0][value]');
