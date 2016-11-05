@@ -67,6 +67,8 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    // Check edit permission on update operation.
+    $operation = ($operation == 'update') ? 'edit' : $operation;
     $permissions[] = $operation . ' any ' . $entity->getEntityTypeId() . ' entities';
     /** @var \Drupal\eck\Entity\EckEntity $entity */
     if ($entity->getOwnerId() == $account->id()) {
