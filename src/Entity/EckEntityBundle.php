@@ -102,7 +102,7 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
     $eckEntityStorage = \Drupal::entityTypeManager()->getStorage($this->getEckEntityTypeMachineName());
     $eckEntityStorage->create(['type' => $this->id()]);
 
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // Clear all caches because the action links need to be regenerated.
     // @todo figure out how to do this without clearing ALL caches.
     drupal_flush_all_caches();

@@ -47,8 +47,7 @@ function eck_entity_type_build(array &$entity_types) {
     $eck_entity_type = $entity_types['eck_entity_type'];
 
     // Get the existing ECK types.
-    $entity_manager = \Drupal::entityManager();
-    $eck_types = $entity_manager->createHandlerInstance(
+    $eck_types = \Drupal::entityTypeManager()->createHandlerInstance(
       $eck_entity_type->getHandlerClass('storage'),
       $eck_entity_type
     )->loadMultiple();
