@@ -89,6 +89,7 @@ class EckEntityBundle extends ConfigEntityBundleBase implements EckEntityBundleI
   public function calculateDependencies() {
     parent::calculateDependencies();
     $this->addDependency('config', "eck.eck_entity_type.{$this->getEckEntityTypeMachineName()}");
+    return $this;
   }
 
   /**
