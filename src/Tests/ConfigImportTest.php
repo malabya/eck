@@ -104,7 +104,7 @@ class ConfigImportTest extends WebTestBase {
     $routeArguments = [
       'eck_entity_type' => 'test_entity',
       'eck_entity_bundle' => 'bundle'
-        ];
+    ];
     $this->drupalPostForm(Url::fromRoute($route, $routeArguments), $edit, t('Save'));
     $this->assertRaw($edit['title[0][value]']);
   }

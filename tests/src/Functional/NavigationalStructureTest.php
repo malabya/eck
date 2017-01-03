@@ -18,7 +18,6 @@ class NavigationalStructureTest extends BrowserTestBase {
   private $baseCrumbs = [
     'Home',
     'Administration',
-    'Structure'
   ];
 
   /** @var string */
@@ -121,12 +120,13 @@ class NavigationalStructureTest extends BrowserTestBase {
     $breadcrumbs = $this->getSession()
       ->getPage()
       ->findAll('css', '.breadcrumb a');
-    self::assertEquals(count($expectedBreadcrumbs), count($breadcrumbs));
+
+    $actualCrumbs = [];
     do {
-      $expectedCrumb = array_shift($expectedBreadcrumbs);
-      $actualCrumb = array_shift($breadcrumbs)->getText();
-      self::assertEquals($expectedCrumb, $actualCrumb);
-    } while (!empty($expectedBreadcrumbs));
+      $actualCrumbs[] = array_shift($breadcrumbs)->getText();
+    } while (!empty($breadcrumbs));
+
+    self::assertEquals($expectedBreadcrumbs, $actualCrumbs);
   }
 
   /**
@@ -135,10 +135,10 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityTypeList() {
     $route = 'eck.entity_type.list';
     $routeArguments = [];
-    $expectedUrl = 'admin/structure/eck/entity_type';
+    $expectedUrl = 'admin/structure/eck';
     $expectedTitle = 'ECK Entity Types';
 
-    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle);
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, ['Structure']);
   }
 
   /**
@@ -147,9 +147,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityTypeAdd() {
     $routeArguments = [];
     $route = 'eck.entity_type.add';
-    $expectedUrl = 'admin/structure/eck/entity_type/add';
+    $expectedUrl = 'admin/structure/eck/add';
     $expectedTitle = 'Add entity type';
-    $crumbs = ['ECK Entity Types'];
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types'
+    ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
@@ -160,9 +163,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityTypeEdit() {
     $route = 'entity.eck_entity_type.edit_form';
     $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
-    $expectedUrl = 'admin/structure/eck/entity_type/manage/' . $this->entityTypeMachineName;
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}";
     $expectedTitle = 'Edit entity type';
-    $crumbs = ['ECK Entity Types'];
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types'
+    ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
@@ -173,9 +179,10 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityTypeDelete() {
     $route = 'entity.eck_entity_type.delete_form';
     $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
-    $expectedUrl = 'admin/structure/eck/entity_type/manage/' . $this->entityTypeMachineName . '/delete';
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
     $expectedTitle = 'Delete entity type';
     $crumbs = [
+      'Structure',
       'ECK Entity Types',
       "Edit entity type"
     ];
@@ -189,10 +196,11 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityList() {
     $route = "eck.entity.{$this->entityTypeMachineName}.list";
     $routeArguments = [];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName;
+    $expectedUrl = "admin/content/{$this->entityTypeMachineName}";
     $expectedTitle = ucfirst("{$this->entityTypeLabel} content");
+    $crumbs = ['Content'];
 
-    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle);
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
 
   /**
@@ -201,10 +209,14 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityAddPage() {
     $route = 'eck.entity.add_page';
     $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
-    $expectedUrl = 'admin/structure/eck/' . $this->entityTypeMachineName . '/content/add';
+    $expectedUrl = "admin/content/{$this->entityTypeMachineName}/add";
     $expectedTitle = "Add " . $this->entityTypeLabel . " content";
+    $crumbs = [
+      'Content',
+      ucfirst("{$this->entityTypeLabel} content")
+    ];
 
-    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle);
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
 
   /**
@@ -216,27 +228,12 @@ class NavigationalStructureTest extends BrowserTestBase {
       'eck_entity_type' => $this->entityTypeMachineName,
       'eck_entity_bundle' => $this->entityBundleMachineName
     ];
-    $expectedUrl = 'admin/structure/eck/' . $this->entityTypeMachineName . '/add/' . $this->entityBundleMachineName;
+    $expectedUrl = "admin/content/{$this->entityTypeMachineName}/add/{$this->entityBundleMachineName}";
     $expectedTitle = "Add {$this->entityBundleMachineName} content";
-
-    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle);
-  }
-
-  /**
-   * @test
-   */
-  public function entityEdit() {
-    $entity = $this->getEntityStorageHandler()
-      ->create(['type' => $this->entityBundleMachineName]);
-    $entity->save();
-
-    $route = "entity.{$this->entityTypeMachineName}.edit_form";
-    $routeArguments = [$this->entityTypeMachineName => $entity->id()];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/' . $entity->id() . '/edit';
-    $expectedTitle = "Edit{$this->entityTypeLabel}";
     $crumbs = [
+      'Content',
       ucfirst("{$this->entityTypeLabel} content"),
-      $this->entityTypeLabel,
+      "Add {$this->entityTypeLabel} content",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -252,10 +249,28 @@ class NavigationalStructureTest extends BrowserTestBase {
 
     $route = "entity.{$this->entityTypeMachineName}.canonical";
     $routeArguments = [$this->entityTypeMachineName => $entity->id()];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/' . $entity->id();
+    $expectedUrl = "{$this->entityTypeMachineName}/{$entity->id()}";
     $expectedTitle = "$this->entityTypeLabel";
+    $this->baseCrumbs = ["Home"];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle);
+  }
+
+  /**
+   * @test
+   */
+  public function entityEdit() {
+    $entity = $this->getEntityStorageHandler()
+      ->create(['type' => $this->entityBundleMachineName]);
+    $entity->save();
+
+    $route = "entity.{$this->entityTypeMachineName}.edit_form";
+    $routeArguments = [$this->entityTypeMachineName => $entity->id()];
+    $expectedUrl = "{$this->entityTypeMachineName}/{$entity->id()}/edit";
+    $expectedTitle = "Edit{$this->entityTypeLabel}";
+    $this->baseCrumbs = ['Home'];
     $crumbs = [
-      ucfirst("{$this->entityTypeLabel} content"),
+      $this->entityTypeLabel,
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -271,10 +286,10 @@ class NavigationalStructureTest extends BrowserTestBase {
 
     $route = "entity.{$this->entityTypeMachineName}.delete_form";
     $routeArguments = [$this->entityTypeMachineName => $entity->id()];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/' . $entity->id() . '/delete';
+    $expectedUrl = "{$this->entityTypeMachineName}/{$entity->id()}/delete";
     $expectedTitle = "Are you sure you want to delete entity ?";
+    $this->baseCrumbs = ['Home'];
     $crumbs = [
-      ucfirst("{$this->entityTypeLabel} content"),
       $this->entityTypeLabel,
     ];
 
@@ -287,9 +302,9 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityBundleList() {
     $route = "eck.entity.{$this->entityTypeMachineName}_type.list";
     $routeArguments = [];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/types';
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/bundles";
     $expectedTitle = ucfirst("{$this->entityTypeLabel} bundles");
-    $crumbs = [ucfirst("{$this->entityTypeLabel} content")];
+    $crumbs = ['Structure', "ECK Entity Types", "Edit entity type"];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
@@ -300,10 +315,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityBundleAdd() {
     $route = "eck.entity.{$this->entityTypeMachineName}_type.add";
     $routeArguments = [];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/types/add';
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/bundles/add";
     $expectedTitle = "Add {$this->entityTypeLabel} bundle";
     $crumbs = [
-      ucfirst("{$this->entityTypeLabel} content"),
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type",
       ucfirst("{$this->entityTypeLabel} bundles"),
     ];
 
@@ -316,10 +333,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityBundleEdit() {
     $route = "entity.{$this->entityTypeMachineName}_type.edit_form";
     $routeArguments = ["{$this->entityTypeMachineName}_type" => $this->entityBundleMachineName];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/types/manage/' . $this->entityBundleMachineName;
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/bundles/{$this->entityBundleMachineName}";
     $expectedTitle = "Edit {$this->entityTypeLabel} bundle";
     $crumbs = [
-      ucfirst("{$this->entityTypeLabel} content"),
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type",
       ucfirst("{$this->entityTypeLabel} bundles"),
     ];
 
@@ -332,10 +351,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   public function entityBundleDelete() {
     $route = "entity.{$this->entityTypeMachineName}_type.delete_form";
     $routeArguments = ["{$this->entityTypeMachineName}_type" => $this->entityBundleMachineName];
-    $expectedUrl = 'admin/structure/eck/entity/' . $this->entityTypeMachineName . '/types/manage/' . $this->entityBundleMachineName . '/delete';
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/bundles/{$this->entityBundleMachineName}/delete";
     $expectedTitle = "Are you sure you want to delete the entity bundle {$this->entityBundleLabel}?";
     $crumbs = [
-      ucfirst("{$this->entityTypeLabel} content"),
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type",
       ucfirst("{$this->entityTypeLabel} bundles"),
       "Edit {$this->entityTypeLabel} bundle",
     ];
