@@ -10,6 +10,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\eck\EckEntityTypeBundleInfo;
@@ -208,8 +209,9 @@ function eck_menu_local_actions_alter(&$local_actions) {
  */
 function eck_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if ($entity instanceof \Drupal\eck\Entity\EckEntity) {
+    // Generalize the entity-type-specific defaults for easier default theming.
     $build['#theme'] = 'eck_entity';
-    $build['#entity'] = $entity;
+    $build['#eck_entity'] = $entity;
   }
 }
 
@@ -218,7 +220,7 @@ function eck_entity_view_alter(array &$build, EntityInterface $entity, EntityVie
  */
 function eck_theme() {
   $templates['eck_entity'] = [
-    'render element' => 'entity',
+    'render element' => 'elements',
   ];
 
   $templates['eck_content_add_list'] = [
@@ -234,8 +236,8 @@ function eck_theme() {
  */
 function eck_theme_suggestions_eck_entity(array $variables) {
   /** @var \Drupal\eck\Entity\EckEntity $entity */
-  $entity = $variables['entity']['#entity'];
-  $sanitized_view_mode = strtr($variables['entity']['#view_mode'], '.', '_');
+  $entity = $variables['elements']['#eck_entity'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
   $suggestions[] = 'eck_entity__' . $sanitized_view_mode;
   $suggestions[] = 'eck_entity__' . $entity->getEntityTypeId();
@@ -254,5 +256,21 @@ function eck_theme_suggestions_eck_entity(array $variables) {
 function eck_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->getProvider() == 'eck') {
     unset($fields['title']);
+  }
+}
+
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function template_preprocess_eck_entity(&$variables) {
+  $variables['eck_entity'] = $variables['elements']['#eck_entity'];
+
+  $variables['entity_type'] = $variables['eck_entity']->getEntityTypeId();
+  $variables['bundle'] = $variables['eck_entity']->bundle();
+
+  // Build the $content variable for templates.
+  $variables += ['content' => []];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
   }
 }
