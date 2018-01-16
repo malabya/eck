@@ -102,50 +102,48 @@ function eck_entity_type_build(array &$entity_types) {
       'admin_permission' => 'administer eck entity bundles',
     );
 
-    if (!empty($eck_types)) {
-      // Add custom particular definitions for each entity.
-      foreach ($eck_types as $eck_type) {
-        // Definitions for the entity type.
-        $definition = array(
-          'id' => $eck_type->id,
-          'label' => $eck_type->label,
-          'bundle_label' => t('@eck_type type', array('@eck_type' => $eck_type->label)),
-          'base_table' => $eck_type->id,
-          'data_table' => $eck_type->id . '_field_data',
-          'links' => array(
-            'canonical' => "/{$eck_type->id}/{{$eck_type->id}}",
-            'edit-form' => "/{$eck_type->id}/{{$eck_type->id}}/edit",
-            'delete-form' => "/{$eck_type->id}/{{$eck_type->id}}/delete",
-          ),
-          'bundle_entity_type' => $eck_type->id . '_type',
-          'field_ui_base_route' => 'entity.' . $eck_type->id . '_type.edit_form',
-          'permission_granularity' => 'bundle',
-          'group' => 'content',
-          'group_label' => t('Content'),
-        );
-        // Merge the definitions.
-        $definition = array_merge($definition, $base_definition);
-        // Add the new content entity to the entity types.
-        $entity_types[$definition['id']] = new ContentEntityType($definition);
+    // Add custom particular definitions for each entity.
+    foreach ($eck_types as $eck_type) {
+      // Definitions for the entity type.
+      $definition = array(
+        'id' => $eck_type->id,
+        'label' => $eck_type->label,
+        'bundle_label' => t('@eck_type type', array('@eck_type' => $eck_type->label)),
+        'base_table' => $eck_type->id,
+        'data_table' => $eck_type->id . '_field_data',
+        'links' => array(
+          'canonical' => "/{$eck_type->id}/{{$eck_type->id}}",
+          'edit-form' => "/{$eck_type->id}/{{$eck_type->id}}/edit",
+          'delete-form' => "/{$eck_type->id}/{{$eck_type->id}}/delete",
+        ),
+        'bundle_entity_type' => $eck_type->id . '_type',
+        'field_ui_base_route' => 'entity.' . $eck_type->id . '_type.edit_form',
+        'permission_granularity' => 'bundle',
+        'group' => 'content',
+        'group_label' => t('Content'),
+      );
+      // Merge the definitions.
+      $definition = array_merge($definition, $base_definition);
+      // Add the new content entity to the entity types.
+      $entity_types[$definition['id']] = new ContentEntityType($definition);
 
-        // Definitions for the entity types bundle.
-        $bundle_definition = array(
-          'id' => $eck_type->id . '_type',
-          'label' => t('@entity_type type', array('@entity_type' => $eck_type->label)),
-          'bundle_of' => $eck_type->id,
-          'config_prefix' => 'eck_type.' . $eck_type->id,
-          'group' => 'configuration',
-          'group_label' => t('Configuration'),
-          'links' => array(
-            'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/edit',
-            'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/delete',
-          ),
-        );
-        // Merge the definitions.
-        $bundle_definition = array_merge($bundle_definition, $bundle_base_definition);
-        // Add the new content entity to the entity types.
-        $entity_types[$bundle_definition['id']] = new ConfigEntityType($bundle_definition);
-      }
+      // Definitions for the entity types bundle.
+      $bundle_definition = array(
+        'id' => $eck_type->id . '_type',
+        'label' => t('@entity_type type', array('@entity_type' => $eck_type->label)),
+        'bundle_of' => $eck_type->id,
+        'config_prefix' => 'eck_type.' . $eck_type->id,
+        'group' => 'configuration',
+        'group_label' => t('Configuration'),
+        'links' => array(
+          'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/edit',
+          'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/delete',
+        ),
+      );
+      // Merge the definitions.
+      $bundle_definition = array_merge($bundle_definition, $bundle_base_definition);
+      // Add the new content entity to the entity types.
+      $entity_types[$bundle_definition['id']] = new ConfigEntityType($bundle_definition);
     }
   }
 }
