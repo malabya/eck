@@ -105,4 +105,12 @@ class FieldTypePluginManagerDummy implements FieldTypePluginManagerInterface {
   public function getInstance(array $options) {
     // Stub.
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreconfiguredOptions($field_type) {
+    // Stub.
+  }
+
 }
