@@ -138,6 +138,7 @@ function eck_entity_type_build(array &$entity_types) {
         'links' => array(
           'edit-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/edit',
           'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/delete',
+          'collection' => '/admin/structure/eck/' . $eck_type->id . '/bundles',
         ),
       );
       // Merge the definitions.
