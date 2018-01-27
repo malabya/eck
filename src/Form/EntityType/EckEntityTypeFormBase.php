@@ -3,10 +3,9 @@
 namespace Drupal\eck\Form\EntityType;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Class EckEntityTypeFormBase.
@@ -16,20 +15,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EckEntityTypeFormBase extends EntityForm {
 
   /**
-   * The entity query factory.
+   * The entity storage class.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $entityQueryFactory;
+  protected $eckEntityTypeStorage;
 
   /**
    * Construct the EckEntityTypeFormBase.
    *
-   * @param QueryFactory $query_factory
-   *   The query factory.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $eck_entity_type_storage
+   *   The eck_entity_type storage.
    */
-  public function __construct(QueryFactory $query_factory) {
-    $this->entityQueryFactory = $query_factory;
+  public function __construct(EntityStorageInterface $eck_entity_type_storage) {
+    $this->eckEntityTypeStorage = $eck_entity_type_storage;
   }
 
   /**
@@ -38,7 +37,7 @@ class EckEntityTypeFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.query'));
+    return new static($container->get('entity_type.manager')->getStorage('eck_entity_type'));
   }
 
   /**
@@ -106,7 +105,7 @@ class EckEntityTypeFormBase extends EntityForm {
    */
   public function exists($entity_id, array $element, FormStateInterface $form_state) {
     // Use the query factory to build a new event entity query.
-    $query = $this->entityQueryFactory->get('eck_entity_type');
+    $query = $this->eckEntityTypeStorage->getQuery();
 
     // Query the entity ID to see if its in use.
     $result = $query->condition('id', $element['#field_prefix'] . $entity_id)

@@ -3,10 +3,10 @@
 namespace Drupal\eck\Form\EntityBundle;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides a form for ECK entity bundle deletion.
@@ -16,20 +16,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EckEntityBundleDeleteConfirm extends EntityConfirmFormBase {
 
   /**
-   * The query factory to create entity queries.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $queryFactory;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new EckEntityBundleDeleteConfirm object.
    *
-   * @param QueryFactory $query_factory
-   *   The query factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(QueryFactory $query_factory) {
-    $this->queryFactory = $query_factory;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -37,7 +37,7 @@ class EckEntityBundleDeleteConfirm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query')
+      $container->get('entity_type.manager')
     );
   }
 
@@ -67,7 +67,7 @@ class EckEntityBundleDeleteConfirm extends EntityConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Check if any entity of this type already exists.
-    $content_number = $this->queryFactory->get($this->entity->getEntityType()->getBundleOf())
+    $content_number = $this->entityTypeManager->getStorage($this->entity->getEntityType()->getBundleOf())->getQuery()
       ->condition('type', $this->entity->id())
       ->count()
       ->execute();
