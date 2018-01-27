@@ -27,11 +27,8 @@ class PermissionsGeneratorTest extends UnitTestBase{
    * @return \Drupal\eck\PermissionsGenerator
    */
   private function createNewSubjectUnderTest() {
-    $urlGeneratorMock = $this->getMockForAbstractClass('\Drupal\Core\Routing\UrlGeneratorInterface');
-
     $permissionsGenerator = new PermissionsGenerator();
     $permissionsGenerator->setStringTranslation($this->getStringTranslationStub());
-    $permissionsGenerator->setUrlGenerator($urlGeneratorMock);
 
     return $permissionsGenerator;
   }

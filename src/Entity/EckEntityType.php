@@ -4,7 +4,6 @@ namespace Drupal\eck\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\eck\EckEntityTypeInterface;
 
 /**

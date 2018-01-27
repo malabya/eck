@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\eck\Entity\EckEntityBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -144,7 +145,7 @@ class EckEntityBundleForm extends EntityForm {
       drupal_set_message(t('The entity bundle %name has been added.', $t_args));
       $context = array_merge(
         $t_args,
-        array('link' => $this->l(t('View'), new Url('eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list')))
+        array('link' => Link::fromTextAndUrl(t('View'), new Url('eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list'))->toString())
       );
       $this->logger($this->entity->getEntityTypeId())->notice('Added entity bundle %name.', $context);
     }

@@ -4,6 +4,7 @@ namespace Drupal\eck\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -101,7 +102,7 @@ class EckEntityBundleListBuilder extends ConfigEntityListBuilder {
     $build['table']['#empty'] = t(
       'No bundles available. @link.',
       array(
-        '@link' => \Drupal::l('Add new bundle', new Url('eck.entity.' . $this->entityType->id() . '.add')),
+        '@link' => Link::fromTextAndUrl($this->t('Add new bundle'), new Url('eck.entity.' . $this->entityType->id() . '.add'))->toString(),
       )
     );
 
