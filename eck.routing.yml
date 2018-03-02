@@ -60,6 +60,8 @@ eck.entity.add:
     parameters:
       eck_entity_type:
         type: entity:eck_entity_type
+    _eck_operation_route: TRUE
+    _admin_route: FALSE
 
 route_callbacks:
   - '\Drupal\eck\Routing\EckRoutes::routes'

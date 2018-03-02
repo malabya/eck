@@ -10,9 +10,11 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Url;
 use Drupal\eck\EckEntityTypeBundleInfo;
 use Drupal\eck\Entity\EckEntity;
 use Drupal\eck\Entity\EckEntityType;
@@ -272,4 +274,33 @@ function template_preprocess_eck_entity(&$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alters the theme form to use the admin theme on eck editing.
+ *
+ * @see eck_form_system_themes_admin_form_submit()
+ */
+function eck_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['admin_theme']['eck_use_admin_theme'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use the administration theme when editing or creating ECK entities'),
+    '#description' => t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions')->toString()]),
+    '#default_value' => \Drupal::configFactory()->getEditable('eck.settings')->get('use_admin_theme'),
+  ];
+  $form['#submit'][] = 'eck_form_system_themes_admin_form_submit';
+}
+
+/**
+ * Form submission handler for system_themes_admin_form().
+ *
+ * @see eck_form_system_themes_admin_form_alter()
+ */
+function eck_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('eck.settings')
+    ->set('use_admin_theme', $form_state->getValue('eck_use_admin_theme'))
+    ->save();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 }

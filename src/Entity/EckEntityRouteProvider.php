@@ -36,6 +36,7 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
       $route_edit = new Route("{$eck_type->id}/{{$eck_type->id}}/edit");
       $route_edit->addDefaults($edit_defaults);
       $route_edit->setRequirement('_entity_access', $eck_type->id . '.edit');
+      $route_edit->setOption('_eck_operation_route', TRUE);
       $route_collection->add("entity.{$eck_type->id}.edit_form", $route_edit);
 
       // Route for delete.
@@ -46,6 +47,7 @@ class EckEntityRouteProvider implements EntityRouteProviderInterface {
       $route_delete = new Route("{$eck_type->id}/{{$eck_type->id}}/delete");
       $route_delete->addDefaults($delete_defaults);
       $route_delete->setRequirement('_entity_access', $eck_type->id . '.delete');
+      $route_delete->setOption('_eck_operation_route', TRUE);
       $route_collection->add("entity.{$eck_type->id}.delete_form", $route_delete);
     }
 
