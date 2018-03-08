@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\eck\Tests;
+
 use Drupal\Core\Url;
 
 /**
@@ -74,11 +75,11 @@ class UITest extends TestBase {
     $entityTypeManager = \Drupal::entityTypeManager();
     $entity = $entityTypeManager->getDefinition('eck_entity_type');
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
-    $this->assertText(t('There is no @label yet.', array('@label' => $entity->getLabel())));
+    $this->assertText(t('There is no @label yet.', ['@label' => $entity->getLabel()]));
 
     $entityType = $this->createEntityType();
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
-    $this->assertNoText(t('There is no @label yet.', array('@label' => $entity->getLabel())));
+    $this->assertNoText(t('There is no @label yet.', ['@label' => $entity->getLabel()]));
     foreach (['Add content', 'Content list'] as $option) {
       $this->assertNoLink(t($option), t('No %option option is shown when there are no bundles.', ['%option' => t($option)]));
     }
@@ -89,7 +90,7 @@ class UITest extends TestBase {
 
     $bundles[] = $this->createEntityBundle($entityType['id'], $entityType['id']);
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
-    $this->assertNoText(t('There is no @label yet.', array('@label' => $entity->getLabel())));
+    $this->assertNoText(t('There is no @label yet.', ['@label' => $entity->getLabel()]));
     $this->assertNoLink(t('Content list'), t('No %option option is shown when there is no content.', ['%option' => t('Content list')]));
     $this->assertLink(t('Add content'));
     $this->assertLink(t('Bundle list'));
@@ -104,7 +105,7 @@ class UITest extends TestBase {
     // There is now content in the datbase, which means the content list link
     // should also be displayed.
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
-    $this->assertNoText(t('There is no @label yet.', array('@label' => $entity->getLabel())));
+    $this->assertNoText(t('There is no @label yet.', ['@label' => $entity->getLabel()]));
     $this->assertLink(t('Content list'));
     $this->assertLink(t('Add content'));
     $this->assertLink(t('Bundle list'));

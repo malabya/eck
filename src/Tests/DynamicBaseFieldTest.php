@@ -29,8 +29,8 @@ class DynamicBaseFieldTest extends TestBase {
 
     // Add a field to the entity type.
     $edit = ['title' => TRUE];
-    $this->drupalPostForm(Url::fromRoute('entity.eck_entity_type.edit_form', ['eck_entity_type' => $type['id']]), $edit, t('Update @type', array('@type' => $type['label'])));
-    $this->assertRaw(t('Entity type %label has been updated.', array('%label' => $type['label'])));
+    $this->drupalPostForm(Url::fromRoute('entity.eck_entity_type.edit_form', ['eck_entity_type' => $type['id']]), $edit, t('Update @type', ['@type' => $type['label']]));
+    $this->assertRaw(t('Entity type %label has been updated.', ['%label' => $type['label']]));
 
     // Make sure the field was added.
     $this->drupalGet(Url::fromRoute('eck.entity.add', $route_args));
@@ -38,8 +38,8 @@ class DynamicBaseFieldTest extends TestBase {
 
     // Remove a field from the entity type.
     $edit = ['created' => FALSE];
-    $this->drupalPostForm(Url::fromRoute('entity.eck_entity_type.edit_form', ['eck_entity_type' => $type['id']]), $edit, t('Update @type', array('@type' => $type['label'])));
-    $this->assertRaw(t('Entity type %label has been updated.', array('%label' => $type['label'])));
+    $this->drupalPostForm(Url::fromRoute('entity.eck_entity_type.edit_form', ['eck_entity_type' => $type['id']]), $edit, t('Update @type', ['@type' => $type['label']]));
+    $this->assertRaw(t('Entity type %label has been updated.', ['%label' => $type['label']]));
 
     // Make sure the base field was removed.
     $this->drupalGet(Url::fromRoute('eck.entity.add', $route_args));

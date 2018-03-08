@@ -59,7 +59,10 @@ class AccessTest extends TestBase {
       $this->drupalLogin($this->drupalCreateUser([$permission]));
       foreach ($route_names as $route) {
         $this->drupalGet(Url::fromRoute($route, $route_args));
-        $this->assertResponse(200, t('Users with the %perm permission can access %route', ['%route' => $route, '%perm' => $permission]));
+        $this->assertResponse(200, t('Users with the %perm permission can access %route', [
+          '%route' => $route,
+          '%perm' => $permission
+        ]));
       }
     }
   }
@@ -101,7 +104,10 @@ class AccessTest extends TestBase {
       $this->drupalLogin($this->drupalCreateUser([$permission]));
       foreach ($routeNames as $routeName) {
         $this->drupalGet(Url::fromRoute($routeName, $routeArguments));
-        $this->assertResponse(200, t('Users with the %perm permission can access %route', ['%route' => $routeName, '%perm' => $permission]));
+        $this->assertResponse(200, t('Users with the %perm permission can access %route', [
+          '%route' => $routeName,
+          '%perm' => $permission
+        ]));
       }
     }
   }
@@ -123,7 +129,7 @@ class AccessTest extends TestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $route_args = [
       'eck_entity_type' => $entityTypeName,
-      'eck_entity_bundle' =>  $this->bundleInfo['type'],
+      'eck_entity_bundle' => $this->bundleInfo['type'],
     ];
     $this->drupalPostForm(Url::fromRoute("eck.entity.add", $route_args), $edit, t('Save'));
 
@@ -131,7 +137,7 @@ class AccessTest extends TestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $route_args = [
       'eck_entity_type' => $entityTypeName,
-      'eck_entity_bundle' =>  $this->bundleInfo['type'],
+      'eck_entity_bundle' => $this->bundleInfo['type'],
     ];
     $this->drupalPostForm(Url::fromRoute("eck.entity.add", $route_args), $edit, t('Save'));
 

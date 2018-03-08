@@ -45,12 +45,12 @@ class LocalTaskEntityTest extends TestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $route_args = [
       'eck_entity_type' => $this->entityType['id'],
-      'eck_entity_bundle' =>  $this->bundle['type'],
+      'eck_entity_bundle' => $this->bundle['type'],
     ];
     $this->drupalPostForm(Url::fromRoute("eck.entity.add", $route_args), $edit, t('Save'));
 
     $route_args = [
-        $this->entityType['id'] => 1,
+      $this->entityType['id'] => 1,
     ];
     $this->assertLocalTasksFor("entity.{$this->entityType['id']}.canonical", $route_args);
     $this->assertLocalTasksFor("entity.{$this->entityType['id']}.edit_form", $route_args);
@@ -81,8 +81,14 @@ class LocalTaskEntityTest extends TestBase {
    */
   protected function assertLocalTaskLinkRoute($route, array $route_args, $label) {
     $url = Url::fromRoute($route, $route_args);
-    $links = $this->xpath('//ul/li/a[contains(@href, :href) and normalize-space(text())=:label]', [':href' => $url->toString(), ':label' => $label]);
+    $links = $this->xpath('//ul/li/a[contains(@href, :href) and normalize-space(text())=:label]', [
+      ':href' => $url->toString(),
+      ':label' => $label
+    ]);
 
-    $this->assert(count($links) == 1, t('Link with label %label found and its route is :route', [':route' => $route, '%label' => $label]));
+    $this->assert(count($links) == 1, t('Link with label %label found and its route is :route', [
+      ':route' => $route,
+      '%label' => $label
+    ]));
   }
 }
