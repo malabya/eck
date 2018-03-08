@@ -53,7 +53,7 @@ class FieldTypePluginManagerDummy implements FieldTypePluginManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     // Stub.
   }
 

@@ -87,7 +87,8 @@ namespace Drupal\Tests\eck\Unit {
 
     private function getEntityTypeRepositoryMock() {
       $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
-      $entity_type_repository->method('getEntityTypeFromClass')->willReturn('eck_entity_type');
+      $entity_type_repository->method('getEntityTypeFromClass')
+        ->willReturn('eck_entity_type');
       return $entity_type_repository;
     }
 
@@ -170,7 +171,7 @@ namespace Drupal\Tests\eck\Unit {
 
     protected function assertArrayKeysEqual($expectedKeys, $arrayToAssert) {
       $this->assertEquals($expectedKeys, array_keys($arrayToAssert));
-  }
+    }
 
   }
 }

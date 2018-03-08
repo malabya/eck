@@ -20,11 +20,9 @@
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-    'eck-entity',
-  ]
-%}
+{% set classes = [
+'eck-entity',
+] %}
 <div{{ attributes.addClass(classes) }}>
-  {{ content }}
+    {{ content }}
 </div>

@@ -20,7 +20,7 @@ class PermissionsGenerator {
    *   The permissions.
    */
   public function entityPermissions() {
-    $perms = array();
+    $perms = [];
     // Generate entity permissions for all entity types.
     foreach (EckEntityType::loadMultiple() as $eck_type) {
       $perms = array_merge($perms, $this->buildPermissions($eck_type));

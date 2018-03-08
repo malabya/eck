@@ -70,7 +70,9 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    */
   public function usesCachedDataWhenAvailable() {
     $this->cacheBackendMock = $this->cacheBackendMock = $this->getMockForAbstractClass(CacheBackendInterface::class);
-    $this->cacheBackendMock->expects($this->once())->method('get')->willReturn((object) ['data' =>'obviously not normal bundle info']);
+    $this->cacheBackendMock->expects($this->once())
+      ->method('get')
+      ->willReturn((object) ['data' => 'obviously not normal bundle info']);
 
     $sut = $this->createNewTestSubject();
     $this->assertSame('obviously not normal bundle info', $sut->getAllBundleInfo());
@@ -156,7 +158,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
    *
    * @return EckEntityTypeBundleInfo
    */
-  protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entityTypeMock = NULL, PHPUnit_Framework_MockObject_MockObject$entityStorageMock = NULL) {
+  protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entityTypeMock = NULL, PHPUnit_Framework_MockObject_MockObject $entityStorageMock = NULL) {
     if (empty($entityTypeMock)) {
       $entityTypeMock = $this->getMockForAbstractClass(EntityTypeInterface::class);
       $entityTypeMock->method('getBundleEntityType')

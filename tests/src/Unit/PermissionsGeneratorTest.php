@@ -9,7 +9,7 @@ use Drupal\eck\PermissionsGenerator;
  *
  * @group Eck
  */
-class PermissionsGeneratorTest extends UnitTestBase{
+class PermissionsGeneratorTest extends UnitTestBase {
 
   /** @var \Drupal\eck\PermissionsGenerator $sut */
   private $sut;
