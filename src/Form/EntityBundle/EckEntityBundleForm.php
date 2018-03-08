@@ -49,47 +49,48 @@ class EckEntityBundleForm extends EntityForm {
     $entity_type_id = $this->entity->getEntityType()->getBundleOf();
     $type = $this->entity;
     $entity = $this->entityTypeManager->getStorage($entity_type_id)->create([
-        'type' => $this->operation == 'add' ? $type->uuid(): $type->id()]
+        'type' => $this->operation == 'add' ? $type->uuid() : $type->id()
+      ]
     );
     $type_label = $entity->getEntityType()->getLabel();
 
-    $form['name'] = array(
+    $form['name'] = [
       '#title' => t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
       '#description' => t(
         'The human-readable name of this entity bundle. This text will be displayed as part of the list on the <em>Add @type content</em> page. This name must be unique.',
-      array('@type' => $type_label)),
+        ['@type' => $type_label]),
       '#required' => TRUE,
       '#size' => 30,
-    );
+    ];
 
-    $form['type'] = array(
+    $form['type'] = [
       '#type' => 'machine_name',
       '#default_value' => $type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
-      '#machine_name' => array(
-        'exists' => array($this, 'exists'),
-        'source' => array('name'),
-      ),
+      '#machine_name' => [
+        'exists' => [$this, 'exists'],
+        'source' => ['name'],
+      ],
       '#description' => t(
         'A unique machine-readable name for this entity type bundle. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the Add %type content page, in which underscores will be converted into hyphens.',
-        array(
+        [
           '%type' => $type_label,
-        )
+        ]
       ),
-    );
+    ];
 
-    $form['description'] = array(
+    $form['description'] = [
       '#title' => t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->description,
       '#description' => t(
         'Describe this entity type bundle. The text will be displayed on the <em>Add @type content</em> page.',
-        array('@type' => $type_label)
+        ['@type' => $type_label]
       ),
-    );
+    ];
 
     return $form;
   }
@@ -118,7 +119,7 @@ class EckEntityBundleForm extends EntityForm {
         'type',
         $this->t(
           "Invalid machine-readable name. Enter a name other than %invalid.",
-          array('%invalid' => $id)
+          ['%invalid' => $id]
         )
       );
     }
@@ -134,7 +135,7 @@ class EckEntityBundleForm extends EntityForm {
 
     $status = $type->save();
 
-    $t_args = array('%name' => $type->label());
+    $t_args = ['%name' => $type->label()];
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message(
@@ -145,9 +146,13 @@ class EckEntityBundleForm extends EntityForm {
       drupal_set_message(t('The entity bundle %name has been added.', $t_args));
       $context = array_merge(
         $t_args,
-        array('link' => Link::fromTextAndUrl(t('View'), new Url('eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list'))->toString())
+        [
+          'link' => Link::fromTextAndUrl(t('View'), new Url('eck.entity.' . $type->getEntityType()
+              ->getBundleOf() . '_type.list'))->toString()
+        ]
       );
-      $this->logger($this->entity->getEntityTypeId())->notice('Added entity bundle %name.', $context);
+      $this->logger($this->entity->getEntityTypeId())
+        ->notice('Added entity bundle %name.', $context);
     }
 
     $form_state->setRedirect(

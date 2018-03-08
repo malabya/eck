@@ -17,7 +17,7 @@ class EckEntityForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
-    $form_state->setRedirect('entity.' . $this->entity->getEntityTypeId() . '.canonical', array($this->entity->getEntityTypeId() => $this->entity->id()));
+    $form_state->setRedirect('entity.' . $this->entity->getEntityTypeId() . '.canonical', [$this->entity->getEntityTypeId() => $this->entity->id()]);
   }
 
 }

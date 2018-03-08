@@ -37,7 +37,8 @@ class EckEntityTypeFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_type.manager')->getStorage('eck_entity_type'));
+    return new static($container->get('entity_type.manager')
+      ->getStorage('eck_entity_type'));
   }
 
   /**
@@ -50,26 +51,26 @@ class EckEntityTypeFormBase extends EntityForm {
     $eck_entity_type = $this->entity;
 
     // Build the form.
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $eck_entity_type->label(),
       '#required' => TRUE,
-    );
+    ];
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
       '#maxlength' => 32,
       '#default_value' => $eck_entity_type->id(),
-      '#machine_name' => array(
-        'exists' => array($this, 'exists'),
+      '#machine_name' => [
+        'exists' => [$this, 'exists'],
         'replace_pattern' => '([^a-z0-9_]+)|(^custom$)',
         'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
-      ),
+      ],
       '#disabled' => !$eck_entity_type->isNew(),
-    );
+    ];
 
     $form['base_fields'] = [
       '#type' => 'fieldset',
@@ -139,7 +140,7 @@ class EckEntityTypeFormBase extends EntityForm {
       drupal_set_message(
         $this->t(
           'Entity type %label has been updated.',
-          array('%label' => $this->entity->label())
+          ['%label' => $this->entity->label()]
         )
       );
     }
@@ -147,7 +148,7 @@ class EckEntityTypeFormBase extends EntityForm {
       drupal_set_message(
         $this->t(
           'Entity type %label has been added.',
-          array('%label' => $this->entity->label())
+          ['%label' => $this->entity->label()]
         )
       );
     }
