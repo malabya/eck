@@ -59,10 +59,10 @@ class EckEntityBundleListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['title'] = t('Name');
-    $header['description'] = array(
+    $header['description'] = [
       'data' => t('Description'),
-      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-    );
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
 
     return $header + parent::buildHeader();
   }
@@ -71,10 +71,10 @@ class EckEntityBundleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['title'] = array(
+    $row['title'] = [
       'data' => $this->getLabel($entity),
-      'class' => array('menu-label'),
-    );
+      'class' => ['menu-label'],
+    ];
     $row['description'] = Xss::filterAdmin($entity->description);
 
     return $row + parent::buildRow($entity);
@@ -101,9 +101,10 @@ class EckEntityBundleListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
     $build['table']['#empty'] = t(
       'No bundles available. @link.',
-      array(
-        '@link' => Link::fromTextAndUrl($this->t('Add new bundle'), new Url('eck.entity.' . $this->entityType->id() . '.add'))->toString(),
-      )
+      [
+        '@link' => Link::fromTextAndUrl($this->t('Add new bundle'), new Url('eck.entity.' . $this->entityType->id() . '.add'))
+          ->toString(),
+      ]
     );
 
     return $build;

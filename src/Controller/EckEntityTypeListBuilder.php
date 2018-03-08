@@ -99,7 +99,8 @@ class EckEntityTypeListBuilder extends ConfigEntityListBuilder {
         $row['operations']['data']['#links']['add_content']['url'] = new Url('eck.entity.add', $arguments);
       }
 
-      $contentExists = (bool) $this->entityTypeManager->getStorage($entity->id())->getQuery()
+      $contentExists = (bool) $this->entityTypeManager->getStorage($entity->id())
+        ->getQuery()
         ->range(0, 1)
         ->execute();
       if ($contentExists) {
