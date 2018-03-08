@@ -95,7 +95,8 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
 
       // Notify storage to create the database schema.
       $entity_type = $this->entityTypeManager()->getDefinition($this->id());
-      \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
+      \Drupal::service('entity_type.listener')
+        ->onEntityTypeCreate($entity_type);
 
       $this->logger($this->id())->notice(
         'Entity type %label has been added.',
