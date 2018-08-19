@@ -108,7 +108,7 @@ function eck_entity_type_build(array &$entity_types) {
       // Definitions for the entity type.
       $definition = [
         'id' => $eck_type->id,
-        'label' => $eck_type->label,
+        'label' => t($eck_type->label),
         'bundle_label' => t('@eck_type type', ['@eck_type' => $eck_type->label]),
         'base_table' => $eck_type->id,
         'data_table' => $eck_type->id . '_field_data',
