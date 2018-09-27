@@ -8,7 +8,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Class ConfigImportTest
  *
- * @group Eck
+ * @group eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
@@ -23,6 +23,14 @@ class ConfigImportTest extends WebTestBase {
    */
   public static $modules = ['eck'];
 
+  /**
+   * @var \Psr\Container\ContainerInterface
+   */
+  protected $container;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

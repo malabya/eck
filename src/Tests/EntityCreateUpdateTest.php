@@ -7,7 +7,7 @@ use Drupal\Core\Url;
 /**
  * Tests if eck entities are correctly created and updated
  *
- * @group Eck
+ * @group eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */

@@ -136,7 +136,7 @@ namespace Drupal\Tests\eck\Unit {
 
     protected function createLanguageManagerMock() {
       $current_language_mock = $this->getMockForAbstractClass('\Drupal\Core\Language\LanguageInterface');
-      $current_language_mock->method('id')->willReturn('en');
+      $current_language_mock->method('getId')->willReturn('en');
 
       $mock = $this->getMockForAbstractClass('\Drupal\Core\Language\LanguageManagerInterface');
       $mock->method('getCurrentLanguage')->willReturn($current_language_mock);

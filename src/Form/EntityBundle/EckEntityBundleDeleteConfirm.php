@@ -87,7 +87,7 @@ class EckEntityBundleDeleteConfirm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = ['%name' => $this->entity->label()];
-    drupal_set_message(t('The entity bundle %name has been deleted', $t_args));
+    \Drupal::messenger()->addMessage($this->t('The entity bundle %name has been deleted', $t_args));
     $this->logger($this->entity->getEntityType()->getBundleOf())
       ->notice('Delete entity type %name', $t_args);
 

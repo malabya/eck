@@ -10,7 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Test ECK's navigational structure. This includes routing, paths, breadcrumbs
  * and page titles.
  *
- * @group ECK
+ * @group eck
  */
 class NavigationalStructureTest extends BrowserTestBase {
 

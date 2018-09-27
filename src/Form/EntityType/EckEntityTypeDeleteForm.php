@@ -61,14 +61,7 @@ class EckEntityTypeDeleteForm extends EntityDeleteForm {
     // Delete the entity type.
     $this->entity->delete();
     // Set a message that the entity type was deleted.
-    drupal_set_message(
-      t(
-        'Entity type %label was deleted.',
-        [
-          '%label' => $this->entity->label(),
-        ]
-      )
-    );
+    \Drupal::messenger()->addMessage($this->t('Entity type %label was deleted.', ['%label' => $this->entity->label()]));
 
     // Redirect to list when completed.
     $form_state->setRedirectUrl(new Url('eck.entity_type.list'));

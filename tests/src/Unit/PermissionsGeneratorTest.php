@@ -7,7 +7,7 @@ use Drupal\eck\PermissionsGenerator;
 /**
  * Tests the form element implementation.
  *
- * @group Eck
+ * @group eck
  */
 class PermissionsGeneratorTest extends UnitTestBase {
 

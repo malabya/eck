@@ -136,22 +136,12 @@ class EckEntityTypeFormBase extends EntityForm {
     // The entity object is already populated with the values from the form.
     $status = $this->entity->save();
 
-    if ($status == SAVED_UPDATED) {
-      drupal_set_message(
-        $this->t(
-          'Entity type %label has been updated.',
-          ['%label' => $this->entity->label()]
-        )
-      );
+    $messageArgs = ['%label' => $this->entity->label()];
+    $message = $this->t('Entity type %label has been added.', $messageArgs);
+    if ($status === SAVED_UPDATED) {
+      $message = $this->t('Entity type %label has been updated.', $messageArgs);
     }
-    else {
-      drupal_set_message(
-        $this->t(
-          'Entity type %label has been added.',
-          ['%label' => $this->entity->label()]
-        )
-      );
-    }
+    \Drupal::messenger()->addMessage($message);
 
     // Redirect the user back to the listing route after the save operation.
     $form_state->setRedirect('eck.entity_type.list');

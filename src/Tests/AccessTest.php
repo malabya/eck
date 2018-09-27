@@ -7,7 +7,7 @@ use Drupal\Core\Url;
 /**
  * Tests eck's access control.
  *
- * @group Eck
+ * @group eck
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
