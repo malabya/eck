@@ -3,7 +3,10 @@
 namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
+use Drupal\eck\Entity\EckEntity;
 use Drupal\eck\Entity\EckEntityType;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -14,7 +17,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class NavigationalStructureTest extends BrowserTestBase {
 
-  public static $modules = ['eck', 'block'];
+  public static $modules = ['eck', 'block', 'field'];
   private $baseCrumbs = [
     'Home',
     'Administration',
@@ -175,12 +178,14 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
+   *
+   * @throws \Exception
    */
   public function entityTypeDelete() {
     $route = 'entity.eck_entity_type.delete_form';
     $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
     $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
-    $expectedTitle = 'Delete entity type';
+    $expectedTitle = "Are you sure you want to delete entity type {$this->entityTypeLabel}?";
     $crumbs = [
       'Structure',
       'ECK Entity Types',
@@ -188,6 +193,201 @@ class NavigationalStructureTest extends BrowserTestBase {
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+    $this->assertSession()->pageTextContains("Configuration deletions The listed configuration will be deleted.{$this->entityTypeLabel} type");
+    $this->assertSession()->pageTextContains($this->entityBundleLabel);
+  }
+
+  /**
+   * @test
+   *
+   * @throws \Exception
+   */
+  public function entityTypeDeleteWithMultipleBundles() {
+    $additional_bundle_name = strtolower($this->randomMachineName());
+    $additional_bundle_label = strtolower($this->randomMachineName());
+    // Create a randomly named bundle.
+    $this->createEntityBundle($this->entityTypeMachineName, $additional_bundle_name, $additional_bundle_label);
+
+    $route = 'entity.eck_entity_type.delete_form';
+    $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
+    $expectedTitle = "Are you sure you want to delete entity type {$this->entityTypeLabel}?";
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type"
+    ];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+
+    $this->assertSession()->pageTextContains("Configuration deletions The listed configuration will be deleted.{$this->entityTypeLabel} type");
+    $this->assertSession()->pageTextContains($additional_bundle_label);
+    $this->assertSession()->pageTextContains($this->entityBundleLabel);
+  }
+
+  /**
+   * @test
+   *
+   * @throws \Exception
+   */
+  public function entityTypeDeleteWithMatchingBundle() {
+    $this->createEntityBundle($this->entityTypeMachineName, $this->entityTypeMachineName, $this->entityTypeLabel);
+
+    \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName . '_type')
+      ->load($this->entityBundleMachineName)
+      ->delete();
+
+    $this->entityBundleMachineName = $this->entityTypeMachineName;
+    $this->entityBundleLabel = $this->entityTypeLabel;
+
+    $route = 'entity.eck_entity_type.delete_form';
+    $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
+    $expectedTitle = "Are you sure you want to delete entity type {$this->entityTypeLabel}?";
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type"
+    ];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+    $this->assertSession()->pageTextContains("This action cannot be undone.");
+
+    // Delete the entity.
+    $this->submitForm([], 'Delete entity type');
+
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Try to load the deleted entity.
+    $entity_type = \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName)
+      ->load($this->entityTypeMachineName);
+
+    // Make sure the entity is deleted.
+    $this->assertNull($entity_type);
+
+    $this->entityTypeList();
+  }
+
+  /**
+   * @test
+   *
+   * @throws \Exception
+   */
+  public function entityTypeDeleteWithField() {
+    // Delete the original bundle.
+    \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName . '_type')
+      ->load($this->entityBundleMachineName)
+      ->delete();
+
+    // Create a bundle with matching name.
+    $this->entityBundleMachineName = $this->entityTypeMachineName;
+    $this->entityBundleLabel = $this->entityTypeLabel;
+    $this->createEntityBundle($this->entityTypeMachineName, $this->entityBundleMachineName, $this->entityBundleLabel);
+
+    FieldStorageConfig::create([
+      'entity_type' => $this->entityTypeMachineName,
+      'field_name' => 'field_decimal',
+      'type' => 'decimal',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => $this->entityTypeMachineName,
+      'field_name' => 'field_decimal',
+      'bundle' => $this->entityBundleMachineName,
+    ])->save();
+
+    $route = 'entity.eck_entity_type.delete_form';
+    $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
+    $expectedTitle = "Are you sure you want to delete entity type {$this->entityTypeLabel}?";
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type"
+    ];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+    $this->assertSession()->pageTextContains("This action cannot be undone.");
+    $this->assertSession()->pageTextContains("Configuration deletions The listed configuration will be deleted.{$this->entityTypeLabel} type{$this->entityTypeLabel}Fieldfield_decimal");
+
+    // Delete the entity.
+    $this->submitForm([], 'Delete entity type');
+
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Try to load the deleted entity.
+    $entity_type = \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName)
+      ->load($this->entityTypeMachineName);
+
+    // Make sure the entity is deleted.
+    $this->assertNull($entity_type);
+
+    $this->entityTypeList();
+  }
+
+  /**
+   * @test
+   *
+   * @throws \Exception
+   */
+  public function entityTypeDeleteWithContent() {
+    $field_machine_name = strtolower($this->randomMachineName());
+    // Create a field.
+    FieldStorageConfig::create([
+      'entity_type'   => $this->entityTypeMachineName,
+      'field_name'    => $field_machine_name,
+      'type'          => 'decimal',
+    ])->save();
+    FieldConfig::create([
+      'entity_type'   => $this->entityTypeMachineName,
+      'field_name'    => $field_machine_name,
+      'bundle'        => $this->entityBundleMachineName,
+    ])->save();
+
+    // Create an entity.
+    \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName)
+      ->create([
+        'type'                => $this->entityBundleMachineName,
+        $field_machine_name   => random_int(1, 1000),
+      ])->save();
+
+    $route = 'entity.eck_entity_type.delete_form';
+    $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
+    $expectedTitle = "Delete entity type";
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type"
+    ];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+    $this->assertSession()->pageTextContains("There is 1 {$this->entityTypeLabel} entity. You can not remove this entity type until you have removed all of the {$this->entityTypeLabel} entities.");
+
+    // Create a second entity.
+    \Drupal::entityTypeManager()
+      ->getStorage($this->entityTypeMachineName)
+      ->create([
+        'type'                => $this->entityBundleMachineName,
+        $field_machine_name   => random_int(1, 1000),
+      ])->save();
+
+    $route = 'entity.eck_entity_type.delete_form';
+    $routeArguments = ['eck_entity_type' => $this->entityTypeMachineName];
+    $expectedUrl = "admin/structure/eck/{$this->entityTypeMachineName}/delete";
+    $expectedTitle = "Delete entity type";
+    $crumbs = [
+      'Structure',
+      'ECK Entity Types',
+      "Edit entity type"
+    ];
+
+    $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
+    $this->assertSession()->pageTextContains("There are 2 {$this->entityTypeLabel} entities. You may not remove {$this->entityTypeLabel} until you have removed all of the {$this->entityTypeLabel} entities.");
   }
 
   /**
