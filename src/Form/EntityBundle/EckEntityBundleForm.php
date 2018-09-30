@@ -169,10 +169,11 @@ class EckEntityBundleForm extends EntityForm {
    *   The form state.
    *
    * @return bool
-   *   TRUE if this format already exists, FALSE otherwise.
+   *   TRUE if this bundle already exists in the entity type, FALSE otherwise.
    */
   public function exists($type, array $element, FormStateInterface $form_state) {
-    return EckEntityBundle::load($type);
+    $bundleStorage = \Drupal::entityTypeManager()->getStorage($this->entity->getEckEntityTypeMachineName() . '_type');
+    return (bool) $bundleStorage->load($type);
   }
 
 }
