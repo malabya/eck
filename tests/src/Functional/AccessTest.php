@@ -19,6 +19,9 @@ class AccessTest extends FunctionalTestBase {
   /** @var array */
   protected $bundleInfo;
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
     $this->entityTypeInfo = $this->createEntityType();

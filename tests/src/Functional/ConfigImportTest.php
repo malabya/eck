@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eck\Tests;
+namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -12,26 +12,22 @@ use Drupal\simpletest\WebTestBase;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class ConfigImportTest extends WebTestBase {
-
-  protected $profile = 'standard';
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['eck'];
-
-  /**
-   * @var \Psr\Container\ContainerInterface
-   */
-  protected $container;
+class ConfigImportTest extends FunctionalTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $profile = 'standard';
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['eck'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
 
     $permissions = [
@@ -58,7 +54,9 @@ class ConfigImportTest extends WebTestBase {
 
     $entityTypeConfigName = 'eck.eck_entity_type.test_entity';
     $entityBundleConfigName = 'eck.eck_type.test_entity.bundle';
+    /** @var \Drupal\Core\Config\StorageInterface $storage */
     $storage = $this->container->get('config.storage');
+    /** @var \Drupal\Core\Config\StorageInterface $sync */
     $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
@@ -97,14 +95,14 @@ class ConfigImportTest extends WebTestBase {
 
     // Verify the values appeared.
     $config = $this->config($entityTypeConfigName);
-    $this->assertEqual($config->getRawData(), $entityTypeConfiguration, 'Entity type configuration imported successfully.');
+    $this->assertEquals($config->getRawData(), $entityTypeConfiguration, 'Entity type configuration imported successfully.');
     // Verify the values appeared.
     $config = $this->config($entityBundleConfigName);
-    $this->assertEqual($config->getRawData(), $entityBundleConfiguration, 'Entity bundle configuration imported successfully.');
+    $this->assertEquals($config->getRawData(), $entityBundleConfiguration, 'Entity bundle configuration imported successfully.');
 
     // Verify the entity type has been added.
     $this->drupalGet(Url::fromRoute('eck.entity_type.list'));
-    $this->assertRaw('Test entity');
+    $this->assertSession()->responseContains('Test entity');
 
     // Test if a new entity can be created.
     $edit = ['title[0][value]' => $this->randomMachineName()];
@@ -114,7 +112,7 @@ class ConfigImportTest extends WebTestBase {
       'eck_entity_bundle' => 'bundle'
     ];
     $this->drupalPostForm(Url::fromRoute($route, $routeArguments), $edit, t('Save'));
-    $this->assertRaw($edit['title[0][value]']);
+    $this->assertSession()->responseContains($edit['title[0][value]']);
   }
 
 }
