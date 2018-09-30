@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eck\Tests;
+namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
 
@@ -11,13 +11,7 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class EntityCreateUpdateTest extends TestBase {
-
-  public function setUp() {
-    parent::setUp();
-
-    $this->drupalLogin($this->drupalCreateUser([], [], TRUE));
-  }
+class EntityCreateUpdateTest extends FunctionalTestBase {
 
   public function testEntityCreationDoesNotResultInMismatchedEntityDefinitions() {
     $this->createEntityType([], 'TestType');
@@ -37,9 +31,9 @@ class EntityCreateUpdateTest extends TestBase {
     $this->assertNoMismatchedFieldDefinitions();
   }
 
-  public function assertNoMismatchedFieldDefinitions() {
+  private function assertNoMismatchedFieldDefinitions() {
     $this->drupalGet(Url::fromRoute('system.status'));
-    $this->assertNoRaw('Mismatched entity and/or field definitions');
+    $this->assertSession()->responseNotContains('Mismatched entity and/or field definitions');
   }
 
 }
