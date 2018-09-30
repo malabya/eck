@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eck\Tests;
+namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
 
@@ -11,25 +11,26 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class LocalTaskEntityTest extends TestBase {
+class LocalTaskEntityTest extends FunctionalTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['node', 'eck', 'block'];
 
   /**
-   * @var
+   * @var array
    */
   protected $entityType;
 
   /**
-   * @var
+   * @var array
    */
   protected $bundle;
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
     $this->entityType = $this->createEntityType();
@@ -86,7 +87,7 @@ class LocalTaskEntityTest extends TestBase {
       ':label' => $label
     ]);
 
-    $this->assert(count($links) == 1, t('Link with label %label found and its route is :route', [
+    $this->assertEquals(1, count($links), t('Link with label %label found and its route is :route', [
       ':route' => $route,
       '%label' => $label
     ]));
