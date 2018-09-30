@@ -13,8 +13,14 @@ namespace Drupal\Tests\eck\Unit {
 
   abstract class UnitTestBase extends UnitTestCase {
 
+    /**
+     * @var array
+     */
     protected $entities;
 
+    /**
+     * @var array
+     */
     private $services;
 
     /**

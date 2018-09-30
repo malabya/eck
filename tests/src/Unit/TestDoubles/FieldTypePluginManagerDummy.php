@@ -6,6 +6,9 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 
+/**
+ * Dummy implementation of FieldTypePluginManagerInterface.
+ */
 class FieldTypePluginManagerDummy implements FieldTypePluginManagerInterface {
 
   /**

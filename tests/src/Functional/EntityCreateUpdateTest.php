@@ -8,17 +8,21 @@ use Drupal\Core\Url;
  * Tests if eck entities are correctly created and updated
  *
  * @group eck
- *
- * @codeCoverageIgnore because we don't have to test the tests
  */
 class EntityCreateUpdateTest extends FunctionalTestBase {
 
+  /**
+   * Test if creation of an entity does not result in mismatched definitions.
+   */
   public function testEntityCreationDoesNotResultInMismatchedEntityDefinitions() {
     $this->createEntityType([], 'TestType');
 
     $this->assertNoMismatchedFieldDefinitions();
   }
 
+  /**
+   * Test if updating an entity type does not result in mismatched definitions.
+   */
   public function testIfEntityUpdateDoesNotResultInMismatchedEntityDefinitions() {
     $this->createEntityType([], 'TestType');
 
@@ -31,6 +35,9 @@ class EntityCreateUpdateTest extends FunctionalTestBase {
     $this->assertNoMismatchedFieldDefinitions();
   }
 
+  /**
+   * Asserts that there are no mismatched definitions.
+   */
   private function assertNoMismatchedFieldDefinitions() {
     $this->drupalGet(Url::fromRoute('system.status'));
     $this->assertSession()->responseNotContains('Mismatched entity and/or field definitions');

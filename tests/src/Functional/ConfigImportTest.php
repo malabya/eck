@@ -9,8 +9,6 @@ use Drupal\simpletest\WebTestBase;
  * Class ConfigImportTest
  *
  * @group eck
- *
- * @codeCoverageIgnore because we don't have to test the tests
  */
 class ConfigImportTest extends FunctionalTestBase {
 
@@ -18,11 +16,6 @@ class ConfigImportTest extends FunctionalTestBase {
    * {@inheritdoc}
    */
   protected $profile = 'standard';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['eck'];
 
   /**
    * {@inheritdoc}
@@ -42,6 +35,7 @@ class ConfigImportTest extends FunctionalTestBase {
 
     // Export the current configuration.
     $configFactory = \Drupal::configFactory();
+    /** @var \Drupal\Core\Config\StorageInterface $sync */
     $sync = $this->container->get('config.storage.sync');
     $config = $configFactory->loadMultiple($configFactory->listAll());
     foreach ($config as $name => $conf) {

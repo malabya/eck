@@ -17,7 +17,11 @@ use Drupal\Tests\BrowserTestBase;
  */
 class NavigationalStructureTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = ['eck', 'block', 'field'];
+
   private $baseCrumbs = [
     'Home',
     'Administration',
@@ -32,6 +36,9 @@ class NavigationalStructureTest extends BrowserTestBase {
   /** @var string */
   private $entityBundleLabel;
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
     $user = $this->drupalCreateUser([
@@ -56,8 +63,12 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Creates an entity type.
+   *
    * @param $entityTypeId
+   *   The entity type id.
    * @param $entityTypeLabel
+   *   The entity type label.
    */
   protected function createEntityType($entityTypeId, $entityTypeLabel) {
     $entityType = EckEntityType::create([
@@ -68,9 +79,14 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Creates a bundle on an entity type.
+   *
    * @param $entityTypeId
+   *   The id of the entity type to add the bundle to.
    * @param $entityBundleMachineName
+   *   The machine name of the bundle to create.
    * @param $entityBundleName
+   *   The label of the bundle to create.
    */
   protected function createEntityBundle($entityTypeId, $entityBundleMachineName, $entityBundleName) {
     $entityBundle = \Drupal::entityTypeManager()
@@ -83,7 +99,10 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Retrieves the entity storage handler.
+   *
    * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   The entity storage handler.
    */
   private function getEntityStorageHandler() {
     return \Drupal::entityTypeManager()
@@ -91,11 +110,18 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Asserts that the page on a given route contains all the elements we expect.
+   *
    * @param $route
+   *   The route to test.
    * @param $routeArguments
+   *   Arguments for the route to test.
    * @param $expectedUrl
+   *   The expected url.
    * @param $expectedTitle
+   *   The expected title.
    * @param $crumbs
+   *   The expected breadcrumbs after the base crumbs.
    */
   private function assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs = []) {
     $url = Url::fromRoute($route, $routeArguments);
@@ -107,7 +133,10 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Asserts that the title of a page contains a given value.
+   *
    * @param string $expectedTitle
+   *   The expected title.
    */
   private function assertTitleEquals($expectedTitle) {
     $titleElement = $this->getSession()
@@ -117,7 +146,10 @@ class NavigationalStructureTest extends BrowserTestBase {
   }
 
   /**
+   * Asserts that the given breadcrumbs are visible.
+   *
    * @param string[] $expectedBreadcrumbs
+   *   The expected breadcrumbs.
    */
   private function assertBreadcrumbsVisible(array $expectedBreadcrumbs) {
     $breadcrumbs = $this->getSession()
@@ -178,8 +210,6 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
-   *
-   * @throws \Exception
    */
   public function entityTypeDelete() {
     $route = 'entity.eck_entity_type.delete_form';
@@ -199,8 +229,6 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
-   *
-   * @throws \Exception
    */
   public function entityTypeDeleteWithMultipleBundles() {
     $additional_bundle_name = strtolower($this->randomMachineName());
@@ -227,8 +255,6 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
-   *
-   * @throws \Exception
    */
   public function entityTypeDeleteWithMatchingBundle() {
     $this->createEntityBundle($this->entityTypeMachineName, $this->entityTypeMachineName, $this->entityTypeLabel);
@@ -272,8 +298,6 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
-   *
-   * @throws \Exception
    */
   public function entityTypeDeleteWithField() {
     // Delete the original bundle.
@@ -330,8 +354,6 @@ class NavigationalStructureTest extends BrowserTestBase {
 
   /**
    * @test
-   *
-   * @throws \Exception
    */
   public function entityTypeDeleteWithContent() {
     $field_machine_name = strtolower($this->randomMachineName());

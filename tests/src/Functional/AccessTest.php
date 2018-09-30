@@ -8,15 +8,25 @@ use Drupal\Core\Url;
  * Tests eck's access control.
  *
  * @group eck
- *
- * @codeCoverageIgnore because we don't have to test the tests
  */
 class AccessTest extends FunctionalTestBase {
 
-  /** @var array */
+  /**
+   * Information about the entity type we are using for testing.
+   *
+   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityType()
+   *
+   * @var array
+   */
   protected $entityTypeInfo;
 
-  /** @var array */
+  /**
+   * Information about the bundle we are using for testing.
+   *
+   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityBundle()
+   *
+   * @var array
+   */
   protected $bundleInfo;
 
   /**
