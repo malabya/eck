@@ -71,4 +71,32 @@ abstract class FunctionalTestBase extends BrowserTestBase {
     return ['created', 'changed', 'uid', 'title'];
   }
 
+  /**
+   * Adds a bundle for a given entity type.
+   *
+   * @param $entity_type
+   *  The entity type to add the bundle for.
+   * @param string $label
+   *  The bundle label
+   *
+   * @return array The machine name and label of the new bundle.
+   * The machine name and label of the new bundle.
+   */
+  protected function createEntityBundle($entity_type, $label = '') {
+    if (empty($label)) {
+      $label = $this->randomMachineName();
+    }
+    $bundle = strtolower($label);
+
+    $edit = [
+      'name' => $label,
+      'type' => $bundle,
+    ];
+    $this->drupalPostForm(Url::fromRoute("eck.entity.{$entity_type}_type.add"), $edit, t('Save bundle'));
+    $this->assertSession()->responseContains("The entity bundle <em class=\"placeholder\">$label</em> has been added.");
+
+    return $edit;
+  }
+
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eck\Tests;
+namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
 
@@ -11,7 +11,7 @@ use Drupal\Core\Url;
  *
  * @codeCoverageIgnore because we don't have to test the tests
  */
-class AccessTest extends TestBase {
+class AccessTest extends FunctionalTestBase {
 
   /** @var array */
   protected $entityTypeInfo;
@@ -50,7 +50,8 @@ class AccessTest extends TestBase {
     foreach ($routes as $route_names) {
       foreach ($route_names as $route) {
         $this->drupalGet(Url::fromRoute($route, $route_args));
-        $this->assertResponse(403, t('Anonymous users cannot access %route', ['%route' => $route]));
+        // Anonymous users can not access the route.
+        $this->assertSession()->statusCodeEquals(403);
       }
     }
 
@@ -59,10 +60,8 @@ class AccessTest extends TestBase {
       $this->drupalLogin($this->drupalCreateUser([$permission]));
       foreach ($route_names as $route) {
         $this->drupalGet(Url::fromRoute($route, $route_args));
-        $this->assertResponse(200, t('Users with the %perm permission can access %route', [
-          '%route' => $route,
-          '%perm' => $permission
-        ]));
+        // Users with the correct permission can access the route.
+        $this->assertSession()->statusCodeEquals(200);
       }
     }
   }
@@ -95,7 +94,8 @@ class AccessTest extends TestBase {
     foreach ($routes as $routeNames) {
       foreach ($routeNames as $routeName) {
         $this->drupalGet(Url::fromRoute($routeName, $routeArguments));
-        $this->assertResponse(403, t('Anonymous users cannot access %route', ['%route' => $routeName]));
+        // Anonymous users can not access the route.
+        $this->assertSession()->statusCodeEquals(403);
       }
     }
 
@@ -104,10 +104,8 @@ class AccessTest extends TestBase {
       $this->drupalLogin($this->drupalCreateUser([$permission]));
       foreach ($routeNames as $routeName) {
         $this->drupalGet(Url::fromRoute($routeName, $routeArguments));
-        $this->assertResponse(200, t('Users with the %perm permission can access %route', [
-          '%route' => $routeName,
-          '%perm' => $permission
-        ]));
+        // Users with the correct permission can access the route.
+        $this->assertSession()->statusCodeEquals(200);
       }
     }
   }
@@ -144,37 +142,49 @@ class AccessTest extends TestBase {
     // Get the entity that was created by the 'any' user.
     $arguments = [$entityTypeName => 1];
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.canonical", $arguments));
-    $this->assertResponse(403, 'The user cannot see content which is not his own.');
+    // The 'own' user has no permission to see content which is not theirs.
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.edit_form", $arguments));
-    $this->assertResponse(403, 'The user cannot edit content which is not his own.');
+    // The 'own' user has no permission to edit content which is not theirs.
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.delete_form", $arguments));
-    $this->assertResponse(403, 'The user cannot delete content which is not his own.');
+    // The 'own' user has no permission to delete content which is not theirs.
+    $this->assertSession()->statusCodeEquals(403);
     // Get the entity that was created by the 'own' user.
     $arguments = [$entityTypeName => 2];
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.canonical", $arguments));
-    $this->assertResponse(200, 'The user can see content which is his own.');
+    // The 'own' user has permission to see their own content.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.edit_form", $arguments));
-    $this->assertResponse(200, 'The user can edit content which is his own.');
+    // The 'own' user has permission to edit their own content.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.delete_form", $arguments));
-    $this->assertResponse(200, 'The user can delete content which not his own.');
+    // The 'own' user has permission to delete their own content.
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalLogin($anyEntityUser);
     // Get the entity that was created by the 'any' user.
     $arguments = [$entityTypeName => 1];
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.canonical", $arguments));
-    $this->assertResponse(200, 'The user can see content which is his own.');
+    // The 'any' user has permission to see their own content.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.edit_form", $arguments));
-    $this->assertResponse(200, 'The user can edit content which is his own.');
+    // The 'any' user has permission to edit their own content.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.delete_form", $arguments));
-    $this->assertResponse(200, 'The user can delete content which is his own.');
+    // The 'any' user has permission to delete their own content.
+    $this->assertSession()->statusCodeEquals(200);
     // Get the entity that was created by the 'own' user.
     $arguments = [$entityTypeName => 2];
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.canonical", $arguments));
-    $this->assertResponse(200, 'The user can see content which is not his own.');
+    // The 'any' user has permission to see content which is not theirs.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.edit_form", $arguments));
-    $this->assertResponse(200, 'The user can edit content which is not his own.');
+    // The 'any' user has permission to edit content which is not theirs.
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(Url::fromRoute("entity.{$entityTypeName}.delete_form", $arguments));
-    $this->assertResponse(200, 'The user can delete content which is not his own.');
+    // The 'any' user has permission to delete content which is not theirs.
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
