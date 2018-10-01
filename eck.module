@@ -44,11 +44,20 @@ function eck_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_build().
  */
 function eck_entity_type_build(array &$entity_types) {
+  static $recursionDepth;
+
+  // Infinite loops can occur when workspaces module is enabled. We therefore
+  // keep track of the number of times this function is called without being
+  // completed. We know we're in an infinite recursion when that number grows
+  // beyond 1, so we just return early to break out of the recursion.
+  if ($recursionDepth++ > 2) {
+    return;
+  }
+
   // Check for eck_entity_type config entity.
   if (!empty($entity_types['eck_entity_type'])) {
     $eck_entity_type = $entity_types['eck_entity_type'];
 
-    // Get the existing ECK types.
     $eck_types = \Drupal::entityTypeManager()->createHandlerInstance(
       $eck_entity_type->getHandlerClass('storage'),
       $eck_entity_type
@@ -148,6 +157,10 @@ function eck_entity_type_build(array &$entity_types) {
       $entity_types[$bundle_definition['id']] = new ConfigEntityType($bundle_definition);
     }
   }
+
+  // We reset the recursion depth tracker to ensure consecutive calls to this
+  // function don't return without processing.
+  $recursionDepth = 0;
 }
 
 /**
