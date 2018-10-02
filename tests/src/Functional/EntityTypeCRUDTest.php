@@ -5,11 +5,11 @@ namespace Drupal\Tests\eck\Functional;
 use Drupal\Core\Url;
 
 /**
- * Tests if eck entities are correctly created and updated
+ * Tests if eck entity types are correctly created and updated.
  *
  * @group eck
  */
-class EntityCreateUpdateTest extends FunctionalTestBase {
+class EntityTypeCRUDTest extends FunctionalTestBase {
 
   /**
    * Test if creation of an entity does not result in mismatched definitions.
