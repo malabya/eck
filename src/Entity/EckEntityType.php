@@ -75,6 +75,20 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    // Entity ids are limited to 32 characters, but since eck adds '_type' to
+    // the id of it's bundle storage, that id would be too long. we therefore
+    // limit the id to 27 characters.
+    if (strlen($this->id()) > ECK_ENTITY_ID_MAX_LENGTH) {
+      throw new \RuntimeException("Entity id has more than " . ECK_ENTITY_ID_MAX_LENGTH . " characters.");
+    }
+
+    parent::preSave($storage);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 

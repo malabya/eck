@@ -24,6 +24,11 @@ use Drupal\eck\Entity\EckEntityType;
 define('ECK_DOCUMENTATION_PAGE', 'https://drupal.org/node/1366144');
 
 /**
+ * Defines the max length of entity id machine name.
+ */
+define("ECK_ENTITY_ID_MAX_LENGTH", 27);
+
+/**
  * Implements hook_help().
  */
 function eck_help($route_name, RouteMatchInterface $route_match) {

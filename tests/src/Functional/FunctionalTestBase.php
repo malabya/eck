@@ -58,6 +58,7 @@ abstract class FunctionalTestBase extends BrowserTestBase {
     }
 
     $this->drupalPostForm(Url::fromRoute('eck.entity_type.add'), $edit, t('Create entity type'));
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains("Entity type <em class=\"placeholder\">$label</em> has been added.");
     return ['id' => $id, 'label' => $label];
   }

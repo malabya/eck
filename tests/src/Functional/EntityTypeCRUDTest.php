@@ -43,4 +43,22 @@ class EntityTypeCRUDTest extends FunctionalTestBase {
     $this->assertSession()->responseNotContains('Mismatched entity and/or field definitions');
   }
 
+  /**
+   * Drupal limits entity type names to 32 characters. This test ensures we also
+   * enforce that to prevent a white screen of death when a user creates an
+   * entity type with more than 32 character long name.
+   */
+  public function testIfTooLongEntityTypeNamesAreCaughtInTime() {
+    $this->createEntityType([], 'a27CharacterLongNameIssLong');
+    $label = 'a28CharacterLongNameIsLonger';
+    $edit = [
+      'label' => $label,
+      'id' => $id = strtolower($label),
+    ];
+
+    $this->drupalPostForm(Url::fromRoute('eck.entity_type.add'), $edit, t('Create entity type'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseContains("Machine name cannot be longer than <em class=\"placeholder\">27</em> characters but is currently <em class=\"placeholder\">28</em> characters long.");
+  }
+
 }
