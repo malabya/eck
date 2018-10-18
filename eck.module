@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Url;
+use Drupal\eck\ArrayDeprecationWrapper;
 use Drupal\eck\EckEntityTypeBundleInfo;
 use Drupal\eck\Entity\EckEntity;
 use Drupal\eck\Entity\EckEntityType;
@@ -292,6 +293,9 @@ function template_preprocess_eck_entity(&$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+
+  $deprecationWarning = "You are using the 'entity' variable in your eck-entity template. You should use 'content' instead. The 'entity' variable will be removed before the release of 8.x-1.0-beta1";
+  $variables['entity'] = new ArrayDeprecationWrapper($variables['content'], $deprecationWarning);
 }
 
 /**
