@@ -47,28 +47,28 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
   /**
    * If this entity type has an "Author" base field.
    *
-   * @var boolean
+   * @var bool
    */
   protected $uid;
 
   /**
    * If this entity type has a "Title" base field.
    *
-   * @var boolean
+   * @var bool
    */
   protected $title;
 
   /**
    * If this entity type has a "Created" base field.
    *
-   * @var boolean
+   * @var bool
    */
   protected $created;
 
   /**
    * If this entity type has a "Changed" base field.
    *
-   * @var boolean
+   * @var bool
    */
   protected $changed;
 
@@ -191,18 +191,30 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     return \Drupal::getContainer()->get('logger.factory')->get($channel);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasAuthorField() {
     return isset($this->uid) && $this->uid;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasChangedField() {
     return isset($this->changed) && $this->changed;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasCreatedField() {
     return isset($this->created) && $this->created;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasTitleField() {
     return isset($this->title) && $this->title;
   }

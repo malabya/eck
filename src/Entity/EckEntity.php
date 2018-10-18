@@ -99,15 +99,15 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         ->setTranslatable(TRUE)
         ->setSetting('max_length', 255)
         ->setDisplayOptions('view', [
-            'label' => 'hidden',
-            'type' => 'string',
-            'weight' => -5,
-          ]
+          'label' => 'hidden',
+          'type' => 'string',
+          'weight' => -5,
+        ]
         )
         ->setDisplayOptions('form', [
-            'type' => 'string_textfield',
-            'weight' => -5,
-          ]
+          'type' => 'string_textfield',
+          'weight' => -5,
+        ]
         )
         ->setDisplayConfigurable('form', TRUE)
         ->setDisplayConfigurable('view', TRUE);
@@ -139,7 +139,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         ->setDisplayConfigurable('view', TRUE);
     }
 
-    // Created field for the entity
+    // Created field for the entity.
     if ($config->get('created')) {
       $fields['created'] = BaseFieldDefinition::create('created')
         ->setLabel(t('Authored on'))
@@ -158,7 +158,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
         ->setDisplayConfigurable('view', TRUE);
     }
 
-    // Changed field for the entity
+    // Changed field for the entity.
     if ($config->get('changed')) {
       $fields['changed'] = BaseFieldDefinition::create('changed')
         ->setLabel(t('Changed'))

@@ -19,7 +19,7 @@ class EckRoutes {
   public function routes() {
     $routeCollection = new RouteCollection();
 
-    /** @var EckEntityType $entityType */
+    /** @var \Drupal\eck\Entity\EckEntityType $entityType */
     foreach (EckEntityType::loadMultiple() as $entityType) {
       $entityTypeId = $entityType->id();
       $entityTypeLabel = $entityType->label();
@@ -114,7 +114,6 @@ class EckRoutes {
     return $this->createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, "edit");
   }
 
-
   /**
    * @param string $entityTypeId
    * @param string $entityTypeLabel
@@ -124,4 +123,5 @@ class EckRoutes {
     $path = "admin/structure/eck/{$entityTypeId}/bundles/{{$entityTypeId}_type}/delete";
     return $this->createBundleCrudRoute($entityTypeId, $entityTypeLabel, $path, "delete");
   }
+
 }

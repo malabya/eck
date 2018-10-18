@@ -15,7 +15,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Url;
 use Drupal\eck\ArrayDeprecationWrapper;
-use Drupal\eck\EckEntityTypeBundleInfo;
 use Drupal\eck\Entity\EckEntity;
 use Drupal\eck\Entity\EckEntityType;
 
@@ -176,7 +175,7 @@ function eck_entity_type_build(array &$entity_types) {
 function eck_menu_local_actions_alter(&$local_actions) {
   $eck_types = EckEntityType::loadMultiple();
 
-  /** @var EckEntityTypeBundleInfo $eckBundleInfo */
+  /** @var \Drupal\eck\EckEntityTypeBundleInfo $eckBundleInfo */
   $eckBundleInfo = Drupal::service('eck.entity_type.bundle.info');
 
   $defaults = [
@@ -188,30 +187,30 @@ function eck_menu_local_actions_alter(&$local_actions) {
 
   /**
    * @var string $name
-   * @var EckEntity $type
+   * @var \Drupal\eck\Entity\EckEntity $type
    */
   foreach ($eck_types as $name => $type) {
     $local_actions['eck.bundle.' . $type->id() . '.add'] = $defaults + [
-        'id' => 'eck.bundle.' . $type->id() . '.add',
-        'route_name' => 'eck.entity.' . $type->id() . '_type.add',
-        'title' => t('Add @label bundle', ['@label' => $type->label()]),
-        'appears_on' => [
-          'eck.entity.' . $type->id() . '_type.list',
-        ],
-      ];
+      'id' => 'eck.bundle.' . $type->id() . '.add',
+      'route_name' => 'eck.entity.' . $type->id() . '_type.add',
+      'title' => t('Add @label bundle', ['@label' => $type->label()]),
+      'appears_on' => [
+        'eck.entity.' . $type->id() . '_type.list',
+      ],
+    ];
 
     if ($eckBundleInfo->entityTypeHasBundles($type->id())) {
       $bundle_machine_names = $eckBundleInfo->getEntityTypeBundleMachineNames($type->id());
       $local_actions['eck.' . $type->id() . '.add'] = $defaults + [
-          'id' => 'eck.' . $type->id() . '.add',
-          'title' => t('Add @label', ['@label' => $type->label()]),
-          'appears_on' => [
-            'eck.entity.' . $type->id() . '.list',
-          ],
-          'route_parameters' => [
-            'eck_entity_type' => $type->id(),
-          ],
-        ];
+        'id' => 'eck.' . $type->id() . '.add',
+        'title' => t('Add @label', ['@label' => $type->label()]),
+        'appears_on' => [
+          'eck.entity.' . $type->id() . '.list',
+        ],
+        'route_parameters' => [
+          'eck_entity_type' => $type->id(),
+        ],
+      ];
 
       if (count($bundle_machine_names) === 1) {
         $local_actions['eck.' . $type->id() . '.add']['route_name'] = 'eck.entity.add';
@@ -228,7 +227,7 @@ function eck_menu_local_actions_alter(&$local_actions) {
  * Implements hook_entity_view_alter().
  */
 function eck_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if ($entity instanceof \Drupal\eck\Entity\EckEntity) {
+  if ($entity instanceof EckEntity) {
     // Generalize the entity-type-specific defaults for easier default theming.
     $build['#theme'] = 'eck_entity';
     $build['#eck_entity'] = $entity;
@@ -311,7 +310,7 @@ function eck_form_system_themes_admin_form_alter(&$form, FormStateInterface $for
     '#title' => t('Use the administration theme when editing or creating ECK entities'),
     '#description' => t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [
       ':permissions' => Url::fromRoute('user.admin_permissions')
-        ->toString()
+        ->toString(),
     ]),
     '#default_value' => \Drupal::configFactory()
       ->getEditable('eck.settings')

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\eck\Functional;
 
 use Drupal\Core\Url;
-use Drupal\eck\Entity\EckEntity;
 use Drupal\eck\Entity\EckEntityType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -27,13 +26,21 @@ class NavigationalStructureTest extends BrowserTestBase {
     'Administration',
   ];
 
-  /** @var string */
+  /**
+   * @var string
+   */
   private $entityTypeMachineName;
-  /** @var string */
+  /**
+   * @var string
+   */
   private $entityTypeLabel;
-  /** @var string */
+  /**
+   * @var string
+   */
   private $entityBundleMachineName;
-  /** @var string */
+  /**
+   * @var string
+   */
   private $entityBundleLabel;
 
   /**
@@ -73,7 +80,7 @@ class NavigationalStructureTest extends BrowserTestBase {
   protected function createEntityType($entityTypeId, $entityTypeLabel) {
     $entityType = EckEntityType::create([
       'id' => $entityTypeId,
-      'label' => $entityTypeLabel
+      'label' => $entityTypeLabel,
     ]);
     $entityType->save();
   }
@@ -93,7 +100,7 @@ class NavigationalStructureTest extends BrowserTestBase {
       ->getStorage($entityTypeId . '_type')
       ->create([
         'type' => $entityBundleMachineName,
-        'name' => $entityBundleName
+        'name' => $entityBundleName,
       ]);
     $entityBundle->save();
   }
@@ -186,7 +193,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $expectedTitle = 'Add entity type';
     $crumbs = [
       'Structure',
-      'ECK Entity Types'
+      'ECK Entity Types',
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -202,7 +209,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $expectedTitle = 'Edit entity type';
     $crumbs = [
       'Structure',
-      'ECK Entity Types'
+      'ECK Entity Types',
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -219,7 +226,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -243,7 +250,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -274,7 +281,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -329,7 +336,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -384,7 +391,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -405,7 +412,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $crumbs = [
       'Structure',
       'ECK Entity Types',
-      "Edit entity type"
+      "Edit entity type",
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -435,7 +442,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $expectedTitle = "Add " . $this->entityTypeLabel . " content";
     $crumbs = [
       'Content',
-      ucfirst("{$this->entityTypeLabel} content")
+      ucfirst("{$this->entityTypeLabel} content"),
     ];
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
@@ -448,7 +455,7 @@ class NavigationalStructureTest extends BrowserTestBase {
     $route = 'eck.entity.add';
     $routeArguments = [
       'eck_entity_type' => $this->entityTypeMachineName,
-      'eck_entity_bundle' => $this->entityBundleMachineName
+      'eck_entity_bundle' => $this->entityBundleMachineName,
     ];
     $expectedUrl = "admin/content/{$this->entityTypeMachineName}/add/{$this->entityBundleMachineName}";
     $expectedTitle = "Add {$this->entityBundleMachineName} content";
@@ -585,4 +592,5 @@ class NavigationalStructureTest extends BrowserTestBase {
 
     $this->assertCorrectPageOnRoute($route, $routeArguments, $expectedUrl, $expectedTitle, $crumbs);
   }
+
 }

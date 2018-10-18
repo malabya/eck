@@ -19,7 +19,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
   /**
    * Determines if the given account is allowed to bypass access control.
    *
-   * @param \Drupal\Core\Session\AccountInterface|NULL $account
+   * @param \Drupal\Core\Session\AccountInterface|null $account
    *
    * @return bool
    */
@@ -32,6 +32,7 @@ class EckEntityAccessControlHandler extends EntityAccessControlHandler {
    * Generates an AccessResult.
    *
    * @param $return_as_object
+   *
    * @return \Drupal\Core\Access\AccessResult|bool
    */
   private function getBypassAccessResult($return_as_object) {

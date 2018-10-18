@@ -11,7 +11,9 @@ use Drupal\eck\PermissionsGenerator;
  */
 class PermissionsGeneratorTest extends UnitTestBase {
 
-  /** @var \Drupal\eck\PermissionsGenerator $sut */
+  /**
+   * @var \Drupal\eck\PermissionsGenerator
+   */
   private $sut;
 
   /**
@@ -77,12 +79,18 @@ class PermissionsGeneratorTest extends UnitTestBase {
     $this->assertOwnerPermissions($permissions);
   }
 
+  /**
+   * Asserts that the correct create permission is returned.
+   */
   protected function assertCreatePermission($permissions) {
     foreach ($this->entities as $id => $entity) {
       $this->assertArrayHasKey("create {$id} entities", $permissions);
     }
   }
 
+  /**
+   * Asserts that the correct global permissions are returned.
+   */
   protected function assertGlobalPermissions($permissions) {
     foreach ($this->entities as $id => $entity) {
       $this->assertArrayHasKey("edit any {$id} entities", $permissions);
@@ -91,6 +99,9 @@ class PermissionsGeneratorTest extends UnitTestBase {
     }
   }
 
+  /**
+   * Asserts that the correct owner permissions are returned.
+   */
   protected function assertOwnerPermissions($permissions) {
     foreach ($this->entities as $id => $entity) {
       /** @var \Drupal\eck\Entity\EckEntityType $entity */

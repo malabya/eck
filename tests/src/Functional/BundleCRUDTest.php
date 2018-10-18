@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\eck\Functional;
 
-use Drupal\Core\Url;
-
 /**
  * Tests eck's bundle creation, update and deletion.
  *

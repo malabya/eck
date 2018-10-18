@@ -12,6 +12,10 @@ use Drupal\eck\Entity\EckEntityType;
  * @group eck
  */
 class EckEntityTest extends UnitTestBase {
+
+  /**
+   * Provides test base field definition data.
+   */
   public function baseFieldDefinitionTestDataProvider() {
     return [
       'default' => [

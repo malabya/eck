@@ -41,7 +41,7 @@ class EckEntityContentLocalTask extends DeriverBase implements ContainerDeriverI
     $this->basePluginDefinition = $basePluginDefinition;
     $derivatives = [];
 
-    /** @var EckEntityType $type */
+    /** @var \Drupal\eck\Entity\EckEntityType $type */
     foreach (EckEntityType::loadMultiple() as $type) {
       $entity_type = $type->id();
       $base_route = "entity.{$entity_type}.canonical";
@@ -68,11 +68,12 @@ class EckEntityContentLocalTask extends DeriverBase implements ContainerDeriverI
    */
   private function createDerivativeDefinition($routeName, $weight, $title, $base_route) {
     $derivative = [
-        'route_name' => $routeName,
-        'weight' => $weight,
-        'title' => $this->t($title),
-        'base_route' => $base_route,
-      ] + $this->basePluginDefinition;
+      'route_name' => $routeName,
+      'weight' => $weight,
+      'title' => $this->t($title),
+      'base_route' => $base_route,
+    ] + $this->basePluginDefinition;
     return $derivative;
   }
+
 }

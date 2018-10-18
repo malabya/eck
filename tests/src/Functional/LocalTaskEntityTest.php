@@ -66,6 +66,7 @@ class LocalTaskEntityTest extends FunctionalTestBase {
 
   /**
    * Go to a page and check if exist the local task links.
+   *
    * @param string $route
    * @param array $routeArguments
    */
@@ -90,12 +91,13 @@ class LocalTaskEntityTest extends FunctionalTestBase {
     $url = Url::fromRoute($route, $route_args);
     $links = $this->xpath('//ul/li/a[contains(@href, :href) and normalize-space(text())=:label]', [
       ':href' => $url->toString(),
-      ':label' => $label
+      ':label' => $label,
     ]);
 
     $this->assertEquals(1, count($links), t('Link with label %label found and its route is :route', [
       ':route' => $route,
-      '%label' => $label
+      '%label' => $label,
     ]));
   }
+
 }

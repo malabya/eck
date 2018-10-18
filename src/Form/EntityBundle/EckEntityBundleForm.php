@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\eck\Entity\EckEntityBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,8 +48,8 @@ class EckEntityBundleForm extends EntityForm {
     $entity_type_id = $this->entity->getEntityType()->getBundleOf();
     $type = $this->entity;
     $entity = $this->entityTypeManager->getStorage($entity_type_id)->create([
-        'type' => $this->operation == 'add' ? $type->uuid() : $type->id()
-      ]
+      'type' => $this->operation == 'add' ? $type->uuid() : $type->id(),
+    ]
     );
     $type_label = $entity->getEntityType()->getLabel();
 
@@ -146,7 +145,7 @@ class EckEntityBundleForm extends EntityForm {
         $t_args,
         [
           'link' => Link::fromTextAndUrl(t('View'), new Url('eck.entity.' . $type->getEntityType()
-              ->getBundleOf() . '_type.list'))->toString()
+            ->getBundleOf() . '_type.list'))->toString(),
         ]
       );
       $this->logger($this->entity->getEntityTypeId())
@@ -165,7 +164,7 @@ class EckEntityBundleForm extends EntityForm {
    *   The bundle type.
    * @param array $element
    *   The form element.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return bool

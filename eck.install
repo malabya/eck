@@ -1,5 +1,10 @@
 <?php
-use Drupal\eck\Entity\EckEntityType;
+
+/**
+ * @file
+ */
+
+use Drupal\eck\Entity\EckEntityBundle;
 
 /**
  * Enable all base fields for existing ECK entity types.
@@ -31,7 +36,7 @@ function eck_update_8001() {
  * Re-save all bundles for all entities to set the correct dependencies.
  */
 function eck_update_8002() {
-  $bundles = \Drupal\eck\Entity\EckEntityBundle::loadMultiple();
+  $bundles = EckEntityBundle::loadMultiple();
   foreach ($bundles as $bundle) {
     $bundle->save();
   }
@@ -39,6 +44,7 @@ function eck_update_8002() {
 
 /**
  * Update entity definitions to fix any mismatched entities.
+ *
  * @see https://www.drupal.org/node/2646412
  */
 function eck_update_8003() {
@@ -60,10 +66,10 @@ function eck_update_8004() {
     'primary key' => TRUE,
     'type' => 'serial',
     'unsigned' => TRUE,
-    'not null' => TRUE
+    'not null' => TRUE,
   ];
 
-  /** @var EckEntityType $entity_type */
+  /** @var \Drupal\eck\Entity\EckEntityType $entity_type */
   foreach ($eckEntityTypes as $machineName => $entity_type) {
     $entityTypeDefinition = $entityTypeManager->getDefinition($machineName);
 

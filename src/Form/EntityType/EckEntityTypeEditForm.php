@@ -38,7 +38,6 @@ class EckEntityTypeEditForm extends EckEntityTypeFormBase {
       }
     }
 
-
     return $form;
   }
 

@@ -76,12 +76,12 @@ abstract class FunctionalTestBase extends BrowserTestBase {
    * Adds a bundle for a given entity type.
    *
    * @param $entity_type
-   *  The entity type to add the bundle for.
+   *   The entity type to add the bundle for.
    * @param string $label
-   *  The bundle label
+   *   The bundle label.
    *
    * @return array The machine name and label of the new bundle.
-   * The machine name and label of the new bundle.
+   *   The machine name and label of the new bundle.
    */
   protected function createEntityBundle($entity_type, $label = '') {
     if (empty($label)) {
@@ -98,6 +98,5 @@ abstract class FunctionalTestBase extends BrowserTestBase {
 
     return $edit;
   }
-
 
 }

@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\eck\EckEntityTypeBundleInfo;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -20,15 +19,25 @@ use PHPUnit_Framework_MockObject_MockObject;
  */
 class EntityTypeBundleInfoTest extends UnitTestBase {
 
-  /** @var EntityTypeManagerInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   protected $entityTypeManagerMock;
-  /** @var LanguageManagerInterface */
+  /**
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
   protected $languageManagerMock;
-  /** @var ModuleHandlerInterface */
+  /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
   protected $moduleHandlerMock;
-  /** @var TypedDataManagerInterface */
+  /**
+   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
+   */
   protected $typedDataManagerMock;
-  /** @var CacheBackendInterface */
+  /**
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
   protected $cacheBackendMock;
 
   /**
@@ -129,7 +138,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
-   * @return EckEntityTypeBundleInfo
+   * @return \Drupal\eck\EckEntityTypeBundleInfo
    */
   protected function createNewTestSubject() {
     if (NULL === $this->entityTypeManagerMock) {
@@ -153,10 +162,10 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
-   * @param PHPUnit_Framework_MockObject_MockObject $entityTypeMock
-   * @param PHPUnit_Framework_MockObject_MockObject $entityStorageMock
+   * @param \PHPUnit_Framework_MockObject_MockObject $entityTypeMock
+   * @param \PHPUnit_Framework_MockObject_MockObject $entityStorageMock
    *
-   * @return EckEntityTypeBundleInfo
+   * @return \Drupal\eck\EckEntityTypeBundleInfo
    */
   protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entityTypeMock = NULL, PHPUnit_Framework_MockObject_MockObject $entityStorageMock = NULL) {
     if (NULL === $entityTypeMock) {
@@ -181,7 +190,7 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   /**
    * @param int $numberOfBundlesToCreate
    *
-   * @return EckEntityTypeBundleInfo
+   * @return \Drupal\eck\EckEntityTypeBundleInfo
    */
   protected function createNewTestSubjectWithEntityTypeAndBundles($numberOfBundlesToCreate = 1) {
     $bundles = [];

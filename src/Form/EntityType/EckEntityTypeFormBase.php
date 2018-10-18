@@ -98,7 +98,7 @@ class EckEntityTypeFormBase extends EntityForm {
    *   The entity ID.
    * @param array $element
    *   The form element.
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
    * @return bool

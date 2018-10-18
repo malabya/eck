@@ -32,7 +32,7 @@ class PermissionsGenerator {
   /**
    * Builds a standard list of entity permissions for a given type.
    *
-   * @param EckEntityType $eck_type
+   * @param \Drupal\eck\Entity\EckEntityType $eck_type
    *   The entity type.
    *
    * @return array
@@ -46,14 +46,26 @@ class PermissionsGenerator {
     );
   }
 
+  /**
+   * Retrieves the listing permission for a given entity type.
+   *
+   * @return array
+   *   The listing permission.
+   */
   private function getListingPermission(EckEntityType $entity_type) {
     return [
       "access {$entity_type->id()} entity listing" => [
         'title' => $this->t('Access %type_name listing page', ['%type_name' => $entity_type->label()]),
-      ]
+      ],
     ];
   }
 
+  /**
+   * Retrieves the create permission for a given entity type.
+   *
+   * @return array
+   *   The create permission.
+   */
   private function getCreatePermission(EckEntityType $entity_type) {
     return [
       "create {$entity_type->id()} entities" => [
@@ -62,6 +74,12 @@ class PermissionsGenerator {
     ];
   }
 
+  /**
+   * Retrieves the edit permissions for a given entity type.
+   *
+   * @return array
+   *    The edit permission.
+   */
   private function getEditPermissions(EckEntityType $entity_type) {
     $permissions = [];
     foreach (['edit', 'delete', 'view'] as $op) {
@@ -73,12 +91,18 @@ class PermissionsGenerator {
     return $permissions;
   }
 
+  /**
+   * Retrieves the edit permission for a given entity type.
+   *
+   * @return array
+   *   The edit permission.
+   */
   private function getEditPermission(EckEntityType $entity_type, $op, $ownership) {
     $ucfirst_op = ucfirst($op);
     return [
       "{$op} {$ownership} {$entity_type->id()} entities" => [
         'title' => $this->t("{$ucfirst_op} {$ownership} %type_name entities", ['%type_name' => $entity_type->label()]),
-      ]
+      ],
     ];
   }
 
