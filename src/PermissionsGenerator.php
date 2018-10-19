@@ -11,6 +11,7 @@ use Drupal\eck\Entity\EckEntityType;
  * @ingroup eck
  */
 class PermissionsGenerator {
+
   use StringTranslationTrait;
 
   /**
@@ -49,6 +50,9 @@ class PermissionsGenerator {
   /**
    * Retrieves the listing permission for a given entity type.
    *
+   * @param \Drupal\eck\Entity\EckEntityType $entity_type
+   *   The entity type.
+   *
    * @return array
    *   The listing permission.
    */
@@ -62,6 +66,9 @@ class PermissionsGenerator {
 
   /**
    * Retrieves the create permission for a given entity type.
+   *
+   * @param \Drupal\eck\Entity\EckEntityType $entity_type
+   *   The entity type.
    *
    * @return array
    *   The create permission.
@@ -77,8 +84,11 @@ class PermissionsGenerator {
   /**
    * Retrieves the edit permissions for a given entity type.
    *
+   * @param \Drupal\eck\Entity\EckEntityType $entity_type
+   *   The entity type.
+   *
    * @return array
-   *    The edit permission.
+   *   The edit permission.
    */
   private function getEditPermissions(EckEntityType $entity_type) {
     $permissions = [];
@@ -93,6 +103,13 @@ class PermissionsGenerator {
 
   /**
    * Retrieves the edit permission for a given entity type.
+   *
+   * @param \Drupal\eck\Entity\EckEntityType $entity_type
+   *   The entity type.
+   * @param string $op
+   *   The operation.
+   * @param string $ownership
+   *   The ownership.
    *
    * @return array
    *   The edit permission.

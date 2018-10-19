@@ -14,6 +14,8 @@ use Drupal\eck\EckEntityTypeInterface;
 class EckEntityCreateAccessCheck implements AccessInterface {
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;

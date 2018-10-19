@@ -65,7 +65,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
   }
 
   /**
-   * @return \Drupal\Core\Field\FieldItemListInterface|string
+   * {@inheritdoc}
    */
   public function label() {
     if ($this->hasField('title')) {

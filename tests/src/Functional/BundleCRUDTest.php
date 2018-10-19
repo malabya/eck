@@ -10,7 +10,11 @@ namespace Drupal\Tests\eck\Functional;
 class BundleCRUDTest extends FunctionalTestBase {
 
   /**
+   * Tests single bundle creation.
+   *
    * @test
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function singleBundleCreation() {
     $entityTypeInfo = $this->createEntityType([], 'TestType');
@@ -18,7 +22,11 @@ class BundleCRUDTest extends FunctionalTestBase {
   }
 
   /**
+   * Tests multiple bundle creation.
+   *
    * @test
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function multipleBundleCreation() {
     $entityTypeInfo = $this->createEntityType([], 'TestType');
@@ -27,7 +35,11 @@ class BundleCRUDTest extends FunctionalTestBase {
   }
 
   /**
+   * Tests identically named bundle creation.
+   *
    * @test
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function identicallyNamedBundleCreation() {
     $entityTypeInfo1 = $this->createEntityType([], 'TestType1');

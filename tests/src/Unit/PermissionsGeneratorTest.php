@@ -12,6 +12,8 @@ use Drupal\eck\PermissionsGenerator;
 class PermissionsGeneratorTest extends UnitTestBase {
 
   /**
+   * The subject under test.
+   *
    * @var \Drupal\eck\PermissionsGenerator
    */
   private $sut;
@@ -26,7 +28,10 @@ class PermissionsGeneratorTest extends UnitTestBase {
   }
 
   /**
+   * Creates a PermissionsGenerator to be used in the tests.
+   *
    * @return \Drupal\eck\PermissionsGenerator
+   *   The created PermissionsGenerator instance.
    */
   private function createNewSubjectUnderTest() {
     $permissionsGenerator = new PermissionsGenerator();
@@ -36,6 +41,8 @@ class PermissionsGeneratorTest extends UnitTestBase {
   }
 
   /**
+   * Tests that no permissions are created if no entity types are defined.
+   *
    * @test
    */
   public function generatesNoPermissionsIfNoEntityTypesAreDefined() {
@@ -43,9 +50,11 @@ class PermissionsGeneratorTest extends UnitTestBase {
   }
 
   /**
+   * Tests permission creation for a single entity type.
+   *
    * @test
    */
-  public function givenSingleEntityType_generatesCorrectPermissions() {
+  public function givenSingleEntityTypeGeneratesCorrectPermissions() {
     $this->addEntityToStorage($this->createEckEntityType('entity_type'));
 
     $permissions = $this->sut->entityPermissions();
@@ -55,9 +64,11 @@ class PermissionsGeneratorTest extends UnitTestBase {
   }
 
   /**
+   * Tests permission creation for an entity type with an author field.
+   *
    * @test
    */
-  public function givenSingleEntityTypeWithAuthorField_generatesCorrectPermissions() {
+  public function givenSingleEntityTypeWithAuthorFieldGeneratesCorrectPermissions() {
     $this->addEntityToStorage($this->createEckEntityType('entity_type', ['uid' => TRUE]));
 
     $permissions = $this->sut->entityPermissions();
@@ -67,9 +78,11 @@ class PermissionsGeneratorTest extends UnitTestBase {
   }
 
   /**
+   * Tests permission creation for entity types with mixed settings.
+   *
    * @test
    */
-  public function givenMultipleEntityTypesWithMixedSettings_generatesCorrectPermissions() {
+  public function givenMultipleEntityTypesWithMixedSettingsGeneratesCorrectPermissions() {
     $this->addEntityToStorage($this->createEckEntityType('entity_type'));
     $this->addEntityToStorage($this->createEckEntityType('another_type', ['uid' => TRUE]));
 

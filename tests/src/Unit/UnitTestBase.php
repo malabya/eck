@@ -17,11 +17,15 @@ namespace Drupal\Tests\eck\Unit {
   abstract class UnitTestBase extends UnitTestCase {
 
     /**
+     * The entities.
+     *
      * @var array
      */
     protected $entities;
 
     /**
+     * The services.
+     *
      * @var array
      */
     private $services;
@@ -188,8 +192,15 @@ namespace Drupal\Tests\eck\Unit {
     }
 
     /**
+     * Creates a test entity type.
+     *
      * @param string $entity_type_id
+     *   The entity type id.
+     * @param array $values
+     *   The values to be set on the created entity.
+     *
      * @return \Drupal\eck\Entity\EckEntityType
+     *   The created eck entity type.
      */
     protected function createEckEntityType($entity_type_id, array $values = []) {
       $values = $values + [

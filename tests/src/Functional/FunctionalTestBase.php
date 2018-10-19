@@ -43,8 +43,10 @@ abstract class FunctionalTestBase extends BrowserTestBase {
    *   Information about the created entity type.
    *   - id:    the type's machine name
    *   - label: the type's label.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
-  protected function createEntityType($fields = [], $label = '') {
+  protected function createEntityType(array $fields = [], $label = '') {
     $label = empty($label) ? $this->randomMachineName() : $label;
     $fields = empty($fields) ? $this->getConfigurableBaseFields() : $fields;
 
@@ -67,6 +69,7 @@ abstract class FunctionalTestBase extends BrowserTestBase {
    * Returns an array of the configurable base fields.
    *
    * @return array
+   *   The machine names of the configurable base fields.
    */
   protected function getConfigurableBaseFields() {
     return ['created', 'changed', 'uid', 'title'];
@@ -75,13 +78,15 @@ abstract class FunctionalTestBase extends BrowserTestBase {
   /**
    * Adds a bundle for a given entity type.
    *
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type to add the bundle for.
    * @param string $label
    *   The bundle label.
    *
-   * @return array The machine name and label of the new bundle.
+   * @return array
    *   The machine name and label of the new bundle.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   protected function createEntityBundle($entity_type, $label = '') {
     if (empty($label)) {

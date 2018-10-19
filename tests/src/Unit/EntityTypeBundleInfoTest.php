@@ -20,27 +20,39 @@ use PHPUnit_Framework_MockObject_MockObject;
 class EntityTypeBundleInfoTest extends UnitTestBase {
 
   /**
+   * The entity type manager mock.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManagerMock;
   /**
+   * The language manager mock.
+   *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManagerMock;
   /**
+   * The module handler mock.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandlerMock;
   /**
+   * The typed data manager mock.
+   *
    * @var \Drupal\Core\TypedData\TypedDataManagerInterface
    */
   protected $typedDataManagerMock;
   /**
+   * The cache backend mock.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackendMock;
 
   /**
+   * Tests that entityTypeHasBundles returns false on non-existing entity type.
+   *
    * @test
    */
   public function returnsFalseWhenNonExistingEntityTypeIsPassed() {
@@ -49,6 +61,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that entityTypeHasBundles returns false if it has no bundles.
+   *
    * @test
    */
   public function returnsFalseWhenEntityTypeHasNoBundles() {
@@ -57,6 +71,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that entityTypeHasBundles returns true if it has bundles.
+   *
    * @test
    */
   public function returnsTrueWhenEntityTypeHasAtLeastOneBundle() {
@@ -65,6 +81,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests caching of data.
+   *
    * @test
    */
   public function entityTypeHasBundlesMethodCachesData() {
@@ -75,6 +93,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that cached data is used if available.
+   *
    * @test
    */
   public function usesCachedDataWhenAvailable() {
@@ -88,6 +108,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that no machine names are returned if the entity type doesn't exist.
+   *
    * @test
    */
   public function returnsNoMachineNamesIfEntityTypeDoesNotExist() {
@@ -96,6 +118,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that no machine names are returned if there are no bundles.
+   *
    * @test
    */
   public function returnsNoMachineNamesIfEntityTypeHasNoBundles() {
@@ -104,6 +128,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that machine names are returned if there are bundles.
+   *
    * @test
    */
   public function returnsMachineNamesIfEntityTypeHasBundles() {
@@ -112,6 +138,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that zero is returned if the entity type doesn't exist.
+   *
    * @test
    */
   public function returnsZeroIfEntityTypeDoesNotExist() {
@@ -120,6 +148,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that zero is returned if the entity type has no bundles.
+   *
    * @test
    */
   public function returnsZeroIfEntityTypeHasNoBundles() {
@@ -128,6 +158,8 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Tests that the number of entity type bundles is counted correctly.
+   *
    * @test
    */
   public function correctlyCountsEntityTypeBundles() {
@@ -138,7 +170,10 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Creates a new test subject.
+   *
    * @return \Drupal\eck\EckEntityTypeBundleInfo
+   *   The newly created test subject.
    */
   protected function createNewTestSubject() {
     if (NULL === $this->entityTypeManagerMock) {
@@ -162,10 +197,15 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Creates a new test subject with an entity type.
+   *
    * @param \PHPUnit_Framework_MockObject_MockObject $entityTypeMock
+   *   The entity type mock.
    * @param \PHPUnit_Framework_MockObject_MockObject $entityStorageMock
+   *   The entity storage mock.
    *
    * @return \Drupal\eck\EckEntityTypeBundleInfo
+   *   The test subject.
    */
   protected function createNewTestSubjectWithEntityType(PHPUnit_Framework_MockObject_MockObject $entityTypeMock = NULL, PHPUnit_Framework_MockObject_MockObject $entityStorageMock = NULL) {
     if (NULL === $entityTypeMock) {
@@ -188,9 +228,13 @@ class EntityTypeBundleInfoTest extends UnitTestBase {
   }
 
   /**
+   * Creates a new test subject with entity type and bundles.
+   *
    * @param int $numberOfBundlesToCreate
+   *   The number of bundles to create.
    *
    * @return \Drupal\eck\EckEntityTypeBundleInfo
+   *   The bundle info to test.
    */
   protected function createNewTestSubjectWithEntityTypeAndBundles($numberOfBundlesToCreate = 1) {
     $bundles = [];

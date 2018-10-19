@@ -19,18 +19,18 @@ class LocalTaskEntityTest extends FunctionalTestBase {
   /**
    * Information about the entity type we are using for testing.
    *
-   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityType()
-   *
    * @var array
+   *
+   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityType()
    */
   protected $entityTypeInfo;
 
   /**
    * Information about the bundle we are using for testing.
    *
-   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityBundle()
-   *
    * @var array
+   *
+   * @see \Drupal\Tests\eck\Functional\FunctionalTestBase::createEntityBundle()
    */
   protected $bundleInfo;
 
@@ -68,7 +68,9 @@ class LocalTaskEntityTest extends FunctionalTestBase {
    * Go to a page and check if exist the local task links.
    *
    * @param string $route
+   *   The route.
    * @param array $routeArguments
+   *   The rout arguments.
    */
   protected function assertLocalTasksFor($route, array $routeArguments) {
     $this->drupalGet(Url::fromRoute($route, $routeArguments));

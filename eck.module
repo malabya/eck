@@ -185,10 +185,8 @@ function eck_menu_local_actions_alter(&$local_actions) {
     'weight' => 0,
   ];
 
-  /**
-   * @var string $name
-   * @var \Drupal\eck\Entity\EckEntity $type
-   */
+  /* @var string $name */
+  /* @var \Drupal\eck\Entity\EckEntity $type */
   foreach ($eck_types as $name => $type) {
     $local_actions['eck.bundle.' . $type->id() . '.add'] = $defaults + [
       'id' => 'eck.bundle.' . $type->id() . '.add',

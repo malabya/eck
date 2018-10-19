@@ -52,7 +52,10 @@ function eck_update_8003() {
 }
 
 /**
- * Upgrades ECK tables (ID columns should be of unsigned int type) and installs new definitions from code.
+ * Upgrades ECK tables.
+ *
+ * (ID columns should be of unsigned int type) and installs new definitions from
+ * code.
  */
 function eck_update_8004() {
   $schema = Drupal::database()->schema();
