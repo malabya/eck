@@ -2,6 +2,7 @@
 
 namespace Drupal\eck\Form\EntityBundle;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -25,13 +26,23 @@ class EckEntityBundleForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * The constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
-    $this->entityTypeManager = $entityTypeManager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -39,7 +50,8 @@ class EckEntityBundleForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -57,10 +69,10 @@ class EckEntityBundleForm extends EntityForm {
     $type_label = $entity->getEntityType()->getLabel();
 
     $form['name'] = [
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t(
+      '#description' => $this->t(
         'The human-readable name of this entity bundle. This text will be displayed as part of the list on the <em>Add @type content</em> page. This name must be unique.',
         ['@type' => $type_label]),
       '#required' => TRUE,
@@ -76,7 +88,7 @@ class EckEntityBundleForm extends EntityForm {
         'exists' => [$this, 'exists'],
         'source' => ['name'],
       ],
-      '#description' => t(
+      '#description' => $this->t(
         'A unique machine-readable name for this entity type bundle. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the Add %type content page, in which underscores will be converted into hyphens.',
         [
           '%type' => $type_label,
@@ -85,14 +97,42 @@ class EckEntityBundleForm extends EntityForm {
     ];
 
     $form['description'] = [
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->description,
-      '#description' => t(
+      '#description' => $this->t(
         'Describe this entity type bundle. The text will be displayed on the <em>Add @type content</em> page.',
         ['@type' => $type_label]
       ),
     ];
+
+    // Field title overrides.
+    $entity_type_config = \Drupal::config('eck.eck_entity_type.' . $entity_type_id);
+
+    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($type->getEntityType()->getBundleOf());
+    $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $type->id());
+
+    foreach (['title', 'uid', 'created', 'changed'] as $field) {
+      if (!empty($entity_type_config->get($field))) {
+        if (!isset($form['title_overrides'])) {
+          $form['title_overrides'] = [
+            '#type' => 'details',
+            '#title' => $this->t('Base field title overrides'),
+            '#open' => $type->isNew(),
+          ];
+        }
+
+        if (($value = $bundle_fields[$field]->getLabel()) == $base_fields[$field]->getLabel()) {
+          $value = '';
+        }
+
+        $form['title_overrides'][$field . '_title_override'] = [
+          '#type' => 'textfield',
+          '#title' => $base_fields[$field]->getLabel(),
+          '#default_value' => $value,
+        ];
+      }
+    }
 
     return $form;
   }
@@ -102,8 +142,8 @@ class EckEntityBundleForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save bundle');
-    $actions['delete']['#value'] = t('Delete bundle');
+    $actions['submit']['#value'] = $this->t('Save bundle');
+    $actions['delete']['#value'] = $this->t('Delete bundle');
 
     return $actions;
   }
@@ -134,6 +174,24 @@ class EckEntityBundleForm extends EntityForm {
     $type = $this->entity;
     $type->type = trim($type->id());
     $type->name = trim($type->name);
+
+    // Update title field definition.
+    $bundle_fields = $this->entityFieldManager->getFieldDefinitions($type->getEntityType()->getBundleOf(), $type->id());
+    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($type->getEntityType()->getBundleOf());
+
+    foreach (['created', 'changed', 'uid', 'title'] as $field) {
+      if (!$form_state->hasValue($field . '_title_override')) {
+        continue;
+      }
+
+      $label = $form_state->getValue($field . '_title_override') ?: $base_fields[$field]->getLabel();
+      $field_definition = $bundle_fields[$field];
+      if ($field_definition->getLabel() != $label) {
+        $field_definition->getConfig($type->id())->setLabel($label)->save();
+      }
+    }
+
+    $this->entityFieldManager->clearCachedFieldDefinitions();
 
     $status = $type->save();
 

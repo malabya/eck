@@ -268,15 +268,6 @@ function eck_theme_suggestions_eck_entity(array $variables) {
 }
 
 /**
- * Implements hook_entity_bundle_field_info_alter().
- */
-function eck_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
-  if ($entity_type->getProvider() == 'eck') {
-    unset($fields['title']);
-  }
-}
-
-/**
  * Implements template_preprocess_HOOK().
  */
 function template_preprocess_eck_entity(&$variables) {
