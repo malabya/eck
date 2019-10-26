@@ -22,6 +22,49 @@ class BundleCRUDTest extends FunctionalTestBase {
   }
 
   /**
+   * Tests single bundle creation with title overrides.
+   *
+   * @test
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function singleBundleCreationWithOverrides() {
+    $entityTypeInfo = $this->createEntityType();
+
+    $title_overrides = [];
+    foreach ($this->getConfigurableBaseFields() as $field) {
+      $title_overrides[$field] = $this->randomMachineName(16);
+    }
+
+    $this->createEntityBundle($entityTypeInfo['id'], '', $title_overrides);
+  }
+
+  /**
+   * Tests single bundle edit with title overrides.
+   *
+   * @test
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function singleBundleEditWithOverrides() {
+    $entityTypeInfo = $this->createEntityType();
+
+    $title_overrides = [];
+    foreach ($this->getConfigurableBaseFields() as $field) {
+      $title_overrides[$field] = $this->randomMachineName(16);
+    }
+
+    $bundle_info = $this->createEntityBundle($entityTypeInfo['id'], '', $title_overrides);
+
+    $new_title_overrides = [];
+    foreach ($this->getConfigurableBaseFields() as $field) {
+      $new_title_overrides[$field] = $this->randomMachineName(16);
+    }
+
+    $this->editEntityBundle($entityTypeInfo['id'], $bundle_info['type'], $this->randomMachineName(16), $new_title_overrides);
+  }
+
+  /**
    * Tests multiple bundle creation.
    *
    * @test

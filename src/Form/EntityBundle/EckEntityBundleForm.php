@@ -175,24 +175,6 @@ class EckEntityBundleForm extends EntityForm {
     $type->type = trim($type->id());
     $type->name = trim($type->name);
 
-    // Update title field definition.
-    $bundle_fields = $this->entityFieldManager->getFieldDefinitions($type->getEntityType()->getBundleOf(), $type->id());
-    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($type->getEntityType()->getBundleOf());
-
-    foreach (['created', 'changed', 'uid', 'title'] as $field) {
-      if (!$form_state->hasValue($field . '_title_override')) {
-        continue;
-      }
-
-      $label = $form_state->getValue($field . '_title_override') ?: $base_fields[$field]->getLabel();
-      $field_definition = $bundle_fields[$field];
-      if ($field_definition->getLabel() != $label) {
-        $field_definition->getConfig($type->id())->setLabel($label)->save();
-      }
-    }
-
-    $this->entityFieldManager->clearCachedFieldDefinitions();
-
     $status = $type->save();
 
     $t_args = ['%name' => $type->label()];
@@ -212,6 +194,24 @@ class EckEntityBundleForm extends EntityForm {
       $this->logger($this->entity->getEntityTypeId())
         ->notice('Added entity bundle %name.', $context);
     }
+
+    // Update field labels definition.
+    $bundle_fields = $this->entityFieldManager->getFieldDefinitions($type->getEntityType()->getBundleOf(), $type->id());
+    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($type->getEntityType()->getBundleOf());
+
+    foreach (['created', 'changed', 'uid', 'title'] as $field) {
+      if (!$form_state->hasValue($field . '_title_override')) {
+        continue;
+      }
+
+      $label = $form_state->getValue($field . '_title_override') ?: $base_fields[$field]->getLabel();
+      $field_definition = $bundle_fields[$field];
+      if ($field_definition->getLabel() != $label) {
+        $field_definition->getConfig($type->id())->setLabel($label)->save();
+      }
+    }
+
+    $this->entityFieldManager->clearCachedFieldDefinitions();
 
     $form_state->setRedirect(
       'eck.entity.' . $type->getEntityType()->getBundleOf() . '_type.list'

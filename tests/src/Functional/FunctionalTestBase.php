@@ -82,13 +82,15 @@ abstract class FunctionalTestBase extends BrowserTestBase {
    *   The entity type to add the bundle for.
    * @param string $label
    *   The bundle label.
+   * @param array $title_overrides
+   *   A key / value array of title overrides.
    *
    * @return array
    *   The machine name and label of the new bundle.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  protected function createEntityBundle($entity_type, $label = '') {
+  protected function createEntityBundle($entity_type, $label = '', $title_overrides = []) {
     if (empty($label)) {
       $label = $this->randomMachineName();
     }
@@ -98,10 +100,46 @@ abstract class FunctionalTestBase extends BrowserTestBase {
       'name' => $label,
       'type' => $bundle,
     ];
+
+    foreach ($title_overrides as $field => $title_override) {
+      $edit[$field . '_title_override'] = $title_override;
+    }
+
     $this->drupalPostForm(Url::fromRoute("eck.entity.{$entity_type}_type.add"), $edit, t('Save bundle'));
     $this->assertSession()->responseContains("The entity bundle <em class=\"placeholder\">$label</em> has been added.");
 
     return $edit;
+  }
+
+  /**
+   * Edits a bundle for a given entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to add the bundle for.
+   * @param string $bundle
+   *   The bundle type.
+   * @param string $label
+   *   The bundle label.
+   * @param array $title_overrides
+   *   A key / value array of title overrides.
+   *
+   * @return array
+   *   The machine name and label of the new bundle.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  protected function editEntityBundle($entity_type, $bundle, $label, $title_overrides = []) {
+    $this->drupalGet(Url::fromRoute("entity.{$entity_type}_type.edit_form", ["{$entity_type}_type" => $bundle]));
+    $this->assertSession()->statusCodeEquals(200);
+
+    $edit = ['name' => $label];
+
+    foreach ($title_overrides as $field =>  $title_override) {
+      $edit[$field . '_title_override'] = $title_override;
+    }
+
+    $this->drupalPostForm(NULL, $edit, t('Save bundle'));
+    $this->assertSession()->responseContains("The entity bundle <em class=\"placeholder\">$label</em> has been updated.");
   }
 
 }
