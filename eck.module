@@ -8,7 +8,6 @@
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -156,6 +155,7 @@ function eck_entity_type_build(array &$entity_types) {
           'delete-form' => '/admin/structure/eck/entity/' . $eck_type->id . '/bundles/{' . $eck_type->id . '_type}/delete',
           'collection' => '/admin/structure/eck/' . $eck_type->id . '/bundles',
         ],
+        'config_export' => ['type', 'name', 'description'],
       ];
       // Merge the definitions.
       $bundle_definition = array_merge($bundle_definition, $bundle_base_definition);

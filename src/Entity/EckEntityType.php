@@ -95,7 +95,7 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
     // Clear the router cache to prevent RouteNotFoundException while creating
     // the edit link.
     \Drupal::service('router.builder')->rebuild();
-    $edit_link = $this->link(t('Edit entity type'));
+    $edit_link = $this->toLink(t('Edit entity type'), 'edit-form')->toString();
 
     if ($update) {
       $this->logger($this->id())->notice(
@@ -104,21 +104,13 @@ class EckEntityType extends ConfigEntityBase implements EckEntityTypeInterface {
       );
     }
     else {
-      // Clear caches first.
-      $this->entityTypeManager()->clearCachedDefinitions();
-
-      // Notify storage to create the database schema.
-      $entity_type = $this->entityTypeManager()->getDefinition($this->id());
-      \Drupal::service('entity_type.listener')
-        ->onEntityTypeCreate($entity_type);
-
       $this->logger($this->id())->notice(
         'Entity type %label has been added.',
         ['%label' => $this->label(), 'link' => $edit_link]
       );
     }
 
-    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+    \Drupal::service('eck.entity.entity_update_service')->applyUpdates($this->id());
   }
 
   /**
