@@ -27,6 +27,15 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
   /**
    * {@inheritdoc}
    */
+  public static function create(array $values = []) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $storage = $entity_type_manager->getStorage($values['entity_type']);
+    return $storage->create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getOwner() {
     if ($this->hasField('uid')) {
       return $this->get('uid')->first()->entity;
