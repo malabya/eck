@@ -38,7 +38,7 @@ class EckEntity extends ContentEntityBase implements EckEntityInterface {
    */
   public function getOwner() {
     if ($this->hasField('uid')) {
-      return $this->get('uid')->first()->entity;
+      return $this->get('uid')->entity;
     }
     return NULL;
   }
