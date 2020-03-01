@@ -86,7 +86,7 @@ namespace Drupal\Tests\eck\Unit {
       $entity_storage = $this->getEntityStorageMock();
       $definition = $this->getMockForAbstractClass(EntityTypeInterface::class);
 
-      $entity_manager = $this->getMockForAbstractClass(EntityManagerInterface::class);
+      $entity_manager = $this->getMockForAbstractClass(EntityTypeManagerInterface::class);
       $entity_manager->method('getStorage')->willReturn($entity_storage);
       $entity_manager->method('getDefinition')->willReturn($definition);
 
